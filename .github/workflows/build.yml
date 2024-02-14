@@ -1,0 +1,29 @@
+name: Deploy to Google Cloud VM
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to Google Cloud VM
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.GOOGLE_CLOUD_VM_IP }}
+          username: ${{ secrets.GOOGLE_CLOUD_VM_USERNAME }}
+          key: ${{ secrets.GOOGLE_CLOUD_SSH_KEY }}
+          script: |
+            eval $(ssh-agent -s)
+            ssh-add -l
+            ssh-add ~/.ssh/id_rsa_emitex_github
+            ssh-add -l
+            cd team-management-slack-bot
+            git remote set-url origin git@github.com:${{ github.repository }}.git
+            git pull origin master
+            npm install
+            tsc
+            pm2 restart dist/app.js -e "logs/err.log" -o "logs/out.log"

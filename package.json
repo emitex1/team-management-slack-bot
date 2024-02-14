@@ -1,0 +1,66 @@
+{
+  "name": "team-management-slack-bot",
+  "version": "1.3.4",
+  "description": "A Slack bot for team management.",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node src/app.ts",
+    "dev": "cross-env DEBUG='reservation:*,@slack/events-api:*' nodemon src/app.ts",
+    "build": "tsc",
+    "buildAndstart": "tsc && node dist/app.js",
+    "build:start": "node dist/app.js",
+    "bump": "node scripts/bumpVersion.js $npm_config_type && git add package.json && git commit -m 'bump version'",
+    "bump:major": "npm run bump --type=major",
+    "bump:minor": "npm run bump --type=minor",
+    "bump:patch": "npm run bump --type=patch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emitex1/team-management-slack-bot.git"
+  },
+  "author": "Emad Armoun",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/emitex1/team-management-slack-bot/issues"
+  },
+  "homepage": "https://github.com/emitex1/team-management-slack-bot#readme",
+  "dependencies": {
+    "@slack/events-api": "^3.0.1",
+    "@slack/web-api": "^6.9.0",
+    "@types/semver": "^7.5.6",
+    "canvas": "^2.11.2",
+    "cors": "^2.8.5",
+    "debug": "~2.6.9",
+    "dotenv": "^8.0.0",
+    "express": "4.18.2",
+    "gifencoder": "^2.0.1",
+    "http-errors": "~1.6.2",
+    "morgan": "~1.9.0",
+    "node-wit": "^6.6.0",
+    "reflect-metadata": "^0.1.13",
+    "semver": "^7.5.4",
+    "sqlite3": "^5.1.7",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0",
+    "typeorm": "^0.3.17"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/debug": "^4.1.10",
+    "@types/express": "^4.17.20",
+    "@types/gifencoder": "^2.0.3",
+    "@types/morgan": "^1.9.7",
+    "@types/node": "^20.9.0",
+    "@types/node-wit": "^6.0.2",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.6",
+    "cross-env": "^6.0.3",
+    "eslint": "^6.2.2",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "nodemon": "^3.0.2",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2",
+    "yaml": "^2.3.4"
+  }
+}

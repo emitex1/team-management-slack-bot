@@ -1,0 +1,44 @@
+@startuml
+skinparam linetype ortho
+!include <C4/C4_Container>
+
+'-------------- Icons Area --------------
+!define ICONURL https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/v2.4.0
+!includeurl ICONURL/common.puml
+!includeurl ICONURL/devicons/sqllite.puml
+!includeurl ICONURL/devicons/javascript.puml
+!includeurl ICONURL/devicons/nodejs.puml
+!includeurl ICONURL/devicons2/slack.puml
+!includeurl ICONURL/devicons2/express_original.puml
+
+'-------------- The Elements --------------
+title: <size:30><&command> SlackBot Architecture <&command></size>
+
+Person(user, "team members")
+DEV2_SLACK(slack, Slack, node, white) #c300ff
+
+Boundary(slackbotBoundary, "SlackBot Boundary") {
+
+    DEV2_EXPRESS_ORIGINAL(routes, SlackBot APIs, rectangle, white) #DeepSkyBlue
+    Container(slackService, "Slack Service")
+    Container(sessionService, "Session Service")
+    Container(witService, "WIT Service")
+    note left
+        AI based conversation service
+    end note
+
+    DEV_NODEJS(candidateService, Candidate Service, rectangle, blue)
+    DEV_SQLLITE(database,SQLite Database,database,red)
+
+    Rel(routes, slackService, "onMention / onMessage")
+    Rel(slackService, sessionService, "get/set a Session")
+    Rel(slackService, witService, "get a follow up answer")
+    Rel(witService, candidateService, "CRUD")
+    Rel(candidateService, database, "CRUD")
+}
+
+Rel(slack, routes, "Send Events")
+Rel(routes, slack, "Send Message")
+user --> slack
+
+@enduml
