@@ -2,6 +2,7 @@ import { AppDataSource } from "../entities/dataSource";
 import { Candidate } from "../entities/Candidate";
 import { Responsible } from "../entities/Responsible";
 import { Role } from "../entities/Role";
+import { elog } from "../util/logHelper";
 
 export const ResponsibleService = {
   getLastResponsible: async (roleName: string) => {
@@ -23,7 +24,7 @@ export const ResponsibleService = {
       .where({ role: role })
       .orderBy("creationDate", "DESC")
       .getRawOne();
-    console.log("lastResponsible", lastResponsible);
+    elog("lastResponsible", lastResponsible);
 
     return lastResponsible;
   },

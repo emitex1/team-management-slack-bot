@@ -14,11 +14,12 @@ import cors from "cors";
 import setupSwagger from "./util/setup_swagger";
 import { RoleService } from "./services/RoleService";
 import { generalRouter } from "./routes/generalRouter";
+import { elog } from "./util/logHelper";
 
 const corsOptions = {
   origin: (origin: string | undefined, callback: any) => {
     const now = new Date();
-    console.log(
+    elog(
       "Caller origin = ",
       origin,
       " >>> ",

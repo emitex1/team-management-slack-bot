@@ -1,4 +1,5 @@
 import { MessageResponse, Wit, WitContext } from "node-wit";
+import { elogRed } from "../util/logHelper";
 
 type ExtractedDataType = {
   intent: string;
@@ -16,13 +17,13 @@ export const WitService = (accessToken: string) => {
         text,
         {} as WitContext
       );
-      // console.log("queryResult = ", queryResult);
+      // elog("queryResult = ", queryResult);
       const { entities, intents } = queryResult;
-      // console.log("all intents = ", intents);
+      // elog("all intents = ", intents);
       if (intents[0].confidence > 0.6) {
         extractedData.intent = intents[0].name;
         Object.keys(entities).forEach((key: string) => {
-          // console.log("entity value=", entities[key]);
+          // elog("entity value=", entities[key]);
           if (entities[key][0].confidence > 0.7) {
             const entity = entities[key][0];
             extractedData[entity.name] = entity.body;
@@ -30,9 +31,9 @@ export const WitService = (accessToken: string) => {
         });
       }
     } catch (e) {
-      console.log("Error extracting entities", e);
+      elogRed("Error extracting entities", e);
     }
-    // console.log("extractedEntities -> ", extractedData);
+    // elog("extractedEntities -> ", extractedData);
     return extractedData;
   };
 

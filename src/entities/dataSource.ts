@@ -4,6 +4,7 @@ import { Candidate } from "./Candidate";
 import { Responsible } from "./Responsible";
 import { Role } from "./Role";
 import { GeneralServices } from "../services/GeneralServices";
+import { elogGreen, elogRed } from "../util/logHelper";
 
 export const AppDataSource = new DataSource({
   type: "sqlite",
@@ -21,14 +22,12 @@ try {
     .then(async () => {
       const initResult = await GeneralServices.initializeRoles();
       if (initResult !== true) {
-        console.log("Error in initializing the data: " + initResult);
+        elogRed("Error in initializing the data: " + initResult);
         return;
       }
-      console.log("Data Source has been initialized!");
+      elogGreen("Data Source has been initialized!");
     })
-    .catch((error) =>
-      console.log("Error in data source initialization, ", error)
-    );
+    .catch((error) => elogRed("Error in data source initialization, ", error));
 } catch (error) {
-  console.log("Error in data source initialization, ", error);
+  elogRed("Error in data source initialization, ", error);
 }
