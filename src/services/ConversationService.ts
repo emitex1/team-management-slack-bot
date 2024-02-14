@@ -6,6 +6,7 @@ import { ResponsibleServiceType } from "../types/ResponsibleService";
 import { intents } from "../types/intents";
 import { areDatesInSameWeek, getFormattedDate } from "../util/dateHelpers";
 import { getRandomFaceEmoji, getRandomIconEmoji } from "../util/emojiHelpers";
+import { elogRed } from "../util/logHelper";
 import { saveRotatingCircleGif } from "./rouletteWheelService";
 
 export class ConversationService {
@@ -36,7 +37,7 @@ export class ConversationService {
     }
 
     const entities = await witService.query(text);
-    // console.log("new entities = ", entities);
+    // elog("new entities = ", entities);
     context.conversation.entities = {
       ...context.conversation.entities,
       ...entities,
@@ -219,7 +220,7 @@ export class ConversationService {
     try {
       const saveResult = await candidateService.addCandidate(newCandidateName);
     } catch (errorMessage) {
-      console.log("error in adding new candidate -> ", errorMessage);
+      elogRed("error in adding new candidate -> ", errorMessage);
       conversation.followUp =
         "Sorry, there were a problem with adding " +
         newCandidateName +
@@ -278,7 +279,7 @@ export class ConversationService {
         newResponsibleRole
       );
     } catch (errorMessage) {
-      console.log("error in adding new responsible -> ", errorMessage);
+      elogRed("error in adding new responsible -> ", errorMessage);
       conversation.followUp =
         "Sorry, there were a problem with adding " +
         newResponsibleName +
@@ -362,7 +363,7 @@ export class ConversationService {
         lastThreeResponsiblesInStr;
       return context;
     } catch (errorMessage) {
-      console.log("error in reading new responsibles -> ", errorMessage);
+      elogRed("error in reading new responsibles -> ", errorMessage);
       conversation.followUp =
         "Sorry, there were a problem with reading the last three " +
         askedResponsibleRole +

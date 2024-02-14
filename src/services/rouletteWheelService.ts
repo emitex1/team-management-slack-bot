@@ -1,6 +1,7 @@
 import fs from "fs";
 import { createCanvas } from "canvas";
 import GIFEncoder from "gifencoder";
+import { elog } from "../util/logHelper";
 
 const outputPath = "roulette_wheel.gif";
 const width = 300;
@@ -91,9 +92,9 @@ export const saveRotatingCircleGif = (names: string[]) => {
   }
 
   gifEncoder.finish();
-  console.log(`Animated GIF saved to: ${outputPath}`);
+  elog(`Animated GIF saved to: ${outputPath}`);
   // outputStream.on('finish', () => {
-  //   console.log(`Animated GIF saved to: ${outputPath}`);
+  //   elog(`Animated GIF saved to: ${outputPath}`);
   // });
 
   // const gifStream = gifEncoder.createReadStream();

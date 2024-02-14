@@ -1,12 +1,13 @@
 import express, { Application } from "express";
 import http from "http";
 import debug from "debug";
+import { Colors, elog, elogColored } from "./util/logHelper";
 
 export const app: Application = express();
 
 // Handle any uncaught exceptions
 process.on("uncaughtException", (err) => {
-  console.log("Error: ", err);
+  elog("Error: ", err);
   debug(" UNCAUGHT EXCEPTION ");
   debug(`[Inside 'uncaughtException' event] ${err.stack}` || err.message);
 });
@@ -39,8 +40,9 @@ const server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 server.listen(port, () => {
-  console.log("============================================================");
-  console.log(`Server is listening on port ${port} !`);
+  elogColored(Colors.magenta, "==========================================");
+  elogColored(Colors.magenta, `Server is listening on port ${port} !`);
+  elogColored(Colors.magenta, "==========================================");
 });
 
 server.on("error", onError);

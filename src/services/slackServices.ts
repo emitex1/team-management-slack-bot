@@ -12,6 +12,7 @@ import { ConversationService } from "./ConversationService";
 import { CandidateServiceType } from "../types/CandidateService";
 import { ResponsibleServiceType } from "../types/ResponsibleService";
 import { configs } from "../configs";
+import { elogRed } from "../util/logHelper";
 
 export const handleMention = async (
   event: MentionEvent,
@@ -136,7 +137,7 @@ const processSlackEvent = async (
     });
 
     if (answerFileName) {
-      // console.log("answerFileName = ", answerFileName);
+      // elog("answerFileName = ", answerFileName);
       sendResult = await slackWebClient.files.uploadV2({
         file: answerFileName,
         filename: answerFileName,
@@ -149,9 +150,9 @@ const processSlackEvent = async (
     if (finalLog) {
       sendToLogChannel(finalLog, session.context.slack.user, slackWebClient);
     }
-    // console.log("Message sent, result =", sendResult);
+    // elog("Message sent, result =", sendResult);
   } catch (e) {
-    console.log("Error in sending message", e);
+    elogRed("Error in sending message", e);
   }
   return sendResult;
 };
@@ -161,10 +162,10 @@ const getUserInfo = async (slackWebClient: WebClient, userId: string) => {
     return (await slackWebClient.users.info({ user: userId })).user?.profile;
   } catch (error: any) {
     if (error.code === ErrorCode.PlatformError) {
-      console.log("Error in getting user info :", error.data);
+      elogRed("Error in getting user info :", error.data);
       return Promise.reject(error.data);
     } else {
-      console.log("Well, that was unexpected.");
+      elogRed("Well, that was unexpected.");
       return Promise.reject("Well, that was unexpected.");
     }
   }
@@ -238,6 +239,6 @@ export const sendToLogChannel = async (
       channel: logsChannelId,
       username: configs.slack.productName,
     });
-    // console.log("Log sent, result =", sendResult);
+    // elog("Log sent, result =", sendResult);
   }
 };
