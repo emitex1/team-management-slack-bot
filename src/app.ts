@@ -15,18 +15,12 @@ import setupSwagger from "./util/setup_swagger";
 import { RoleService } from "./services/RoleService";
 import { generalRouter } from "./routes/generalRouter";
 import { elog } from "./util/logHelper";
+import { nowDate, nowTime } from "./util/dateHelpers";
 
 const corsOptions = {
   origin: (origin: string | undefined, callback: any) => {
     const now = new Date();
-    elog(
-      "Caller origin = ",
-      origin,
-      " >>> ",
-      now.toDateString(),
-      ", ",
-      now.toLocaleTimeString()
-    );
+    elog("Caller origin = ", origin, " >>> ", nowDate(), ", ", nowTime());
     const allowedUrls = process.env.ALLOWED_URLS?.split(",") || [];
     if (!origin || allowedUrls.includes(origin)) {
       callback(null, true);

@@ -27,3 +27,13 @@ export const getFormattedDate = (date: Date): string => {
     year: "numeric",
   });
 };
+
+export const nowDate = () => {
+  const now = new Date();
+  return now.toDateString();
+};
+
+export const nowTime = () => {
+  const now = new Date();
+  return now.toLocaleTimeString();
+};
