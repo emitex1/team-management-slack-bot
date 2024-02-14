@@ -69,11 +69,13 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Web Panel api endpoints
 app.use(
   "/api/webpanel",
   webPanelRouter(configs, CandidateService, ResponsibleService, RoleService)
 );
 
+// General api endpoints
 app.use("/api", generalRouter(GeneralServices));
 
 // a basic api endpoint for test
