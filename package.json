@@ -1,6 +1,6 @@
 {
   "name": "promobot",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "A Slack bot for team management.",
   "main": "index.js",
   "scripts": {
