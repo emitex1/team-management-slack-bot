@@ -16,14 +16,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/emitex1/team-management-slack-bot.git"
+    "url": "git+https://github.com/Emad-Armoun/promobot.git"
   },
   "author": "Emad Armoun",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/emitex1/team-management-slack-bot/issues"
+    "url": "https://github.com/Emad-Armoun/promobot/issues"
   },
-  "homepage": "https://github.com/emitex1/team-management-slack-bot#readme",
+  "homepage": "https://github.com/Emad-Armoun/promobot#readme",
   "dependencies": {
     "@slack/events-api": "^3.0.1",
     "@slack/web-api": "^6.9.0",
