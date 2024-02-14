@@ -1,5 +1,5 @@
 {
-  "name": "promobot",
+  "name": "team-management-slack-bot",
   "version": "1.4.1",
   "description": "A Slack bot for team management.",
   "main": "index.js",
