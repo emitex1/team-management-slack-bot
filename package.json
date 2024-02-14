@@ -1,6 +1,6 @@
 {
   "name": "team-management-slack-bot",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "A Slack bot for team management.",
   "main": "index.js",
   "scripts": {
