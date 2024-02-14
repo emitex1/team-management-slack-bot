@@ -54,7 +54,6 @@ app.use((err: any, req: Request, res: Response, _next: any) => {
 const witService = WitService(configs.wit.toekn!);
 const sessionService = SessionService<Context>();
 const generalService = GeneralServices();
-const candidateService = CandidateService();
 const responsibleService = ResponsibleService();
 const roleService = RoleService();
 
@@ -65,7 +64,7 @@ app.use(
     configs,
     witService,
     sessionService,
-    candidateService,
+    CandidateService,
     responsibleService
   )
 );
@@ -76,7 +75,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(
   "/api/webpanel",
-  webPanelRouter(configs, candidateService, responsibleService, roleService)
+  webPanelRouter(configs, CandidateService, responsibleService, roleService)
 );
 
 app.use("/api", generalRouter(generalService));
