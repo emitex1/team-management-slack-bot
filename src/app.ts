@@ -53,7 +53,6 @@ app.use((err: any, req: Request, res: Response, _next: any) => {
 
 const witService = WitService(configs.wit.toekn!);
 const sessionService = SessionService<Context>();
-const responsibleService = ResponsibleService();
 const roleService = RoleService();
 
 // SlackBot api endpoints
@@ -64,7 +63,7 @@ app.use(
     witService,
     sessionService,
     CandidateService,
-    responsibleService
+    ResponsibleService
   )
 );
 
@@ -74,7 +73,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(
   "/api/webpanel",
-  webPanelRouter(configs, CandidateService, responsibleService, roleService)
+  webPanelRouter(configs, CandidateService, ResponsibleService, roleService)
 );
 
 app.use("/api", generalRouter(GeneralServices));

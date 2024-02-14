@@ -1,11 +1,10 @@
 import { AppDataSource } from "../entities/dataSource";
 import { Candidate } from "../entities/Candidate";
-import { ResponsibleServiceType } from "../types/ResponsibleService";
 import { Responsible } from "../entities/Responsible";
 import { Role } from "../entities/Role";
 
-export const ResponsibleService = (): ResponsibleServiceType => {
-  const getLastResponsible = async (roleName: string) => {
+export const ResponsibleService = {
+  getLastResponsible: async (roleName: string) => {
     const roleRepository = AppDataSource.getRepository(Role);
     const role = await roleRepository
       .createQueryBuilder()
@@ -27,12 +26,9 @@ export const ResponsibleService = (): ResponsibleServiceType => {
     console.log("lastResponsible", lastResponsible);
 
     return lastResponsible;
-  };
+  },
 
-  const getLastThreeResponsible = async (
-    roleName: string,
-    limitation?: number
-  ) => {
+  getLastThreeResponsible: async (roleName: string, limitation?: number) => {
     const roleRepository = AppDataSource.getRepository(Role);
     const role = await roleRepository
       .createQueryBuilder()
@@ -55,9 +51,9 @@ export const ResponsibleService = (): ResponsibleServiceType => {
       .getMany();
 
     return lastThreeResponsibles;
-  };
+  },
 
-  const getCandidateResponsiblities = async (
+  getCandidateResponsiblities: async (
     candidateId: string,
     roleName: string
   ) => {
@@ -83,12 +79,9 @@ export const ResponsibleService = (): ResponsibleServiceType => {
       .getMany();
 
     return candidateResponsiblities;
-  };
+  },
 
-  const addResponsibleIfExists = async (
-    candidateName: string,
-    roleName: string
-  ) => {
+  addResponsibleIfExists: async (candidateName: string, roleName: string) => {
     const candidatesRepository = AppDataSource.getRepository(Candidate);
     const candidate = await candidatesRepository.findOneBy({
       name: candidateName,
@@ -116,9 +109,9 @@ export const ResponsibleService = (): ResponsibleServiceType => {
     const responsibleRepository = AppDataSource.getRepository(Responsible);
     const savedResponsible = await responsibleRepository.save(responsible);
     return savedResponsible;
-  };
+  },
 
-  const addResponsible = async (candidateId: string) => {
+  addResponsible: async (candidateId: string) => {
     const candidatesRepository = AppDataSource.getRepository(Candidate);
     const candidate = await candidatesRepository.findOneBy({
       id: candidateId,
@@ -134,22 +127,13 @@ export const ResponsibleService = (): ResponsibleServiceType => {
     const responsibleRepository = AppDataSource.getRepository(Responsible);
     const savedResponsible = await responsibleRepository.save(responsible);
     return savedResponsible;
-  };
+  },
 
-  const readAll = async () => {
+  readAll: async () => {
     const responsibleRepository = AppDataSource.getRepository(Responsible);
     const responsibles = await responsibleRepository.find({
       relations: { candidate: true, role: true },
     });
     return responsibles;
-  };
-
-  return {
-    getLastResponsible,
-    getLastThreeResponsible,
-    getCandidateResponsiblities,
-    addResponsible,
-    addResponsibleIfExists,
-    readAll,
-  };
+  },
 };
