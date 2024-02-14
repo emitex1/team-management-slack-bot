@@ -1,0 +1,97 @@
+POST http://localhost:3001/api/webpanel/candidates HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Emad",
+    "lastName": "Armoun",
+    "title": "Mr.",
+    "userName": "emitex"
+}
+
+###
+
+http://localhost:3001/api/webpanel/candidates
+
+###
+
+http://localhost:3001/api/webpanel/candidates?isActive=true
+
+
+###
+
+http://localhost:3001/api/webpanel/candidates?isActive=false
+
+###
+
+http://localhost:3001/api/webpanel/candidates?search=as
+
+###
+
+http://localhost:3001/api/webpanel/candidates?search=as&isActive=true
+
+###
+
+http://localhost:3001/api/webpanel/candidates?search=as&isActive=false
+
+###
+
+http://localhost:3001/api/webpanel/candidate/wrong_candidate_id
+
+###
+
+http://localhost:3001/api/webpanel/candidate/028ffb5b-3b51-49a8-8af9-f9496123160e
+
+###
+
+PUT http://localhost:3001/api/webpanel/candidate/028ffb5b-3b51-49a8-8af9-f9496123160e/deactivate
+
+###
+
+PUT http://localhost:3001/api/webpanel/candidate/1 HTTP/1.1
+content-type: application/json
+
+{}
+
+###
+
+PUT http://localhost:3001/api/webpanel/candidate/wrong_id HTTP/1.1
+content-type: application/json
+
+{
+    "name": "John"
+}
+
+###
+
+PUT http://localhost:3001/api/webpanel/candidate/028ffb5b-3b51-49a8-8af9-f9496123160e HTTP/1.1
+content-type: application/json
+
+{
+    "name": "John"
+}
+
+###
+
+PUT http://localhost:3001/api/webpanel/candidate/028ffb5b-3b51-49a8-8af9-f9496123160e HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Emad 2",
+    "lastName": "Armoun 2",
+    "title": "Mr.",
+    "userName": "emitex2"
+}
+
+###
+
+http://localhost:3001/api/webpanel/roles/roleA
+
+###
+
+http://localhost:3001/api/webpanel/roles/roleA/ffd0d3be-8459-4ee3-9f57-5f0fa866476d
+
+###
+
+http://localhost:3001/api/webpanel/roles/roleA/f7ec6557-6c40-4c8c-84de-81e7d55495a2
+
+###
