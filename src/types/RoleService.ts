@@ -1,7 +1,3 @@
-import { Role } from "../entities/Role";
+import { RoleService } from "../services/RoleService";
 
-export type RoleServiceType = {
-  createRole: (title: string) => Promise<Role>;
-  readAll: () => Promise<Role[]>;
-  isValidRole: (title: string) => Promise<boolean>;
-};
+export type RoleServiceType = typeof RoleService;
