@@ -184,6 +184,11 @@ export const webPanelRouter = (
           res.status(400).json(createOutput(null, "Candidate ID is required"));
         }
 
+        const candidate = await candidateService.readCandidateById(candidateId);
+        if (!candidate) {
+          res.status(404).json(createOutput(null, "Candidate not found"));
+        }
+
         const candidateResponsiblities =
           await responsibleService.getCandidateResponsiblities(
             candidateId,
