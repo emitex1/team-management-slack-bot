@@ -19,8 +19,7 @@ export const AppDataSource = new DataSource({
 try {
   AppDataSource.initialize()
     .then(async () => {
-      const generalServices = GeneralServices();
-      const initResult = await generalServices.initializeRoles();
+      const initResult = await GeneralServices.initializeRoles();
       if (initResult !== true) {
         console.log("Error in initializing the data: " + initResult);
         return;

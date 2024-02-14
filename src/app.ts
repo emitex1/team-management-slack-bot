@@ -53,7 +53,6 @@ app.use((err: any, req: Request, res: Response, _next: any) => {
 
 const witService = WitService(configs.wit.toekn!);
 const sessionService = SessionService<Context>();
-const generalService = GeneralServices();
 const responsibleService = ResponsibleService();
 const roleService = RoleService();
 
@@ -78,7 +77,7 @@ app.use(
   webPanelRouter(configs, CandidateService, responsibleService, roleService)
 );
 
-app.use("/api", generalRouter(generalService));
+app.use("/api", generalRouter(GeneralServices));
 
 // a basic api endpoint for test
 app.get("/api/hi", (req: Request, res: Response) => {

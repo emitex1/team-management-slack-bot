@@ -2,12 +2,11 @@ import { AppDataSource } from "../entities/dataSource";
 import { Candidate } from "../entities/Candidate";
 import { Responsible } from "../entities/Responsible";
 import { Role } from "../entities/Role";
-import { GeneralServiceType } from "../types/GeneralServiceType";
 import { initCandidates } from "../fixture/init_candidates";
 import { initRoles } from "../fixture/init_roles";
 
-export const GeneralServices = (): GeneralServiceType => {
-  const clearAll = async () => {
+export const GeneralServices = {
+  clearAll: async () => {
     const roleRepo = AppDataSource.getRepository(Role);
     roleRepo.delete({});
 
@@ -20,9 +19,9 @@ export const GeneralServices = (): GeneralServiceType => {
     // await candidateRepo.query(`TRUNCATE candidate RESTART IDENTITY CASCADE;`);
 
     return true;
-  };
+  },
 
-  const initializeRoles = async () => {
+  initializeRoles: async () => {
     const roleRepo = AppDataSource.getRepository(Role);
 
     initRoles.forEach(async (role) => {
@@ -33,9 +32,9 @@ export const GeneralServices = (): GeneralServiceType => {
     });
 
     return true;
-  };
+  },
 
-  const initializeCandidates = async () => {
+  initializeCandidates: async () => {
     const roleRepo = AppDataSource.getRepository(Role);
 
     initCandidates.forEach(async (candidate) => {
@@ -73,11 +72,5 @@ export const GeneralServices = (): GeneralServiceType => {
     });
 
     return true;
-  };
-
-  return {
-    clearAll,
-    initializeCandidates,
-    initializeRoles,
-  };
+  },
 };
