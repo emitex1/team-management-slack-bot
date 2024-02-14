@@ -1,4 +1,4 @@
-# Team Management Slack Bot
+# Promobot
 
 This is a Slack bot specified for team management.
 

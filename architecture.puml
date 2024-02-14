@@ -12,7 +12,7 @@ skinparam linetype ortho
 !includeurl ICONURL/devicons2/express_original.puml
 
 '-------------- The Elements --------------
-title: <size:30><&command> SlackBot Architecture <&command></size>
+title: <size:30><&command> Promobot Architecture <&command></size>
 
 Person(user, "team members")
 DEV2_SLACK(slack, Slack, node, white) #c300ff
