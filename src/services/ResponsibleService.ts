@@ -29,7 +29,7 @@ export const ResponsibleService = {
     return lastResponsible;
   },
 
-  getLastThreeResponsible: async (roleName: string, limitation?: number) => {
+  getLastResponsibles: async (roleName: string, limitation?: number) => {
     const roleRepository = AppDataSource.getRepository(Role);
     const role = await roleRepository
       .createQueryBuilder()

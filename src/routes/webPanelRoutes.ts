@@ -153,7 +153,7 @@ export const webPanelRouter = (configs: ConfigType) => {
         return res.status(404).json(createOutput(null, "Role not found"));
       }
 
-      const responsibles = await ResponsibleService.getLastThreeResponsible(
+      const responsibles = await ResponsibleService.getLastResponsibles(
         req.params.role_name
       );
       res.json(createOutput(responsibles));

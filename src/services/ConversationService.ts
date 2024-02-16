@@ -87,8 +87,10 @@ export class ConversationService {
 
     const activeCandidates = await CandidateService.readActiveCandidates();
 
-    const lastThreeResponsibles =
-      await ResponsibleService.getLastThreeResponsible(neededRole, 3);
+    const lastThreeResponsibles = await ResponsibleService.getLastResponsibles(
+      neededRole,
+      3
+    );
 
     const allCandidatesExceptLastThree = activeCandidates.filter((candidate) =>
       lastThreeResponsibles.every(
@@ -260,8 +262,10 @@ export class ConversationService {
       return context;
     }
 
-    const lastThreeResponsibles =
-      await ResponsibleService.getLastThreeResponsible(newResponsibleRole, 3);
+    const lastThreeResponsibles = await ResponsibleService.getLastResponsibles(
+      newResponsibleRole,
+      3
+    );
     const lastThreeResponsiblesInStr = lastThreeResponsibles
       .map(
         (r) =>
@@ -304,10 +308,7 @@ export class ConversationService {
 
     try {
       const lastThreeResponsibles =
-        await ResponsibleService.getLastThreeResponsible(
-          askedResponsibleRole,
-          3
-        );
+        await ResponsibleService.getLastResponsibles(askedResponsibleRole, 3);
 
       if (lastThreeResponsibles.length === 0) {
         conversation.followUp = `Sorry, there is no ${askedResponsibleRole} registered yet in the list. :x:`;
