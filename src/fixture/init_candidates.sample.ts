@@ -3,7 +3,7 @@ export const initCandidates = [
     name: "Emad",
     lastName: "Armoun",
     title: "Mr.",
-    responsibles: [
+    supervisors: [
       {
         creationDate: new Date("12.18.2023").getTime(),
         role: {
@@ -16,7 +16,7 @@ export const initCandidates = [
     name: "John",
     lastName: "Doe",
     title: "Mr.",
-    responsibles: [
+    supervisors: [
       {
         creationDate: new Date("12.18.2023").getTime(),
         role: {

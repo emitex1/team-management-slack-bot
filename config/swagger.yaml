@@ -31,8 +31,8 @@ tags:
     # externalDocs:
     #   description: Find out more
     #   url: http://swagger.io
-  - name: Responsible
-    description: Read Responsible related information
+  - name: Supervisor
+    description: Read Supervisor related information
 
 paths:
   /candidates:
@@ -233,10 +233,10 @@ paths:
   /roles/{role_name}:
     get:
       tags:
-        - Responsible
-      summary: Get all the responsibles
-      description: Get all the responsibles
-      operationId: getResponsibles
+        - Supervisor
+      summary: Get all the supervisors
+      description: Get all the supervisors
+      operationId: getSupervisors
       parameters:
         - name: role_name
           in: path
@@ -258,12 +258,12 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: "#/components/schemas/Responsible"
+                      $ref: "#/components/schemas/Supervisor"
                   pagination:
                     $ref: "#/components/schemas/Pagination"
             application/xml:
               schema:
-                $ref: "#/components/schemas/Responsible"
+                $ref: "#/components/schemas/Supervisor"
         "400":
           description: Invalid ID supplied
         "404":
@@ -272,10 +272,10 @@ paths:
   /roles/{role_name}/{candidate_id}:
     get:
       tags:
-        - Responsible
-      summary: Find responsible according to the candidate ID
-      description: Returns the list of responsibles related to the candidate
-      operationId: getResponsiblesByCandidateId
+        - Supervisor
+      summary: Find supervisor according to the candidate ID
+      description: Returns the list of supervisors related to the candidate
+      operationId: getSupervisorsByCandidateId
       parameters:
         - name: role_name
           in: path
@@ -303,7 +303,7 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: "#/components/schemas/ResponsibleA"
+                      $ref: "#/components/schemas/SupervisorA"
                   pagination:
                     $ref: "#/components/schemas/Pagination"
 
@@ -341,7 +341,7 @@ components:
               description: A timestamp indicates the last date of edit
               example: 1705842561342
 
-    ResponsibleA:
+    SupervisorA:
       type: object
       properties:
         id:

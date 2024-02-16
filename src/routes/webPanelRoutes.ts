@@ -6,7 +6,7 @@ import { sendToLogChannel } from "../services/slackServices";
 import { logsConstants } from "../constants/logs";
 import { CandidateService } from "../services/CandidateService";
 import { RoleService } from "../services/RoleService";
-import { ResponsibleService } from "../services/ResponsibleService";
+import { SupervisorService } from "../services/SupervisorService";
 
 export const webPanelRouter = (configs: ConfigType) => {
   const router = express.Router();
@@ -153,10 +153,10 @@ export const webPanelRouter = (configs: ConfigType) => {
         return res.status(404).json(createOutput(null, "Role not found"));
       }
 
-      const responsibles = await ResponsibleService.getLastResponsibles(
+      const supervisors = await SupervisorService.getLastSupervisors(
         req.params.role_name
       );
-      res.json(createOutput(responsibles));
+      res.json(createOutput(supervisors));
     } catch (error) {
       const errorMessage = (error as ErrorType).message;
       res.status(500).json(createOutput(null, errorMessage));
@@ -184,12 +184,12 @@ export const webPanelRouter = (configs: ConfigType) => {
           res.status(404).json(createOutput(null, "Candidate not found"));
         }
 
-        const candidateResponsiblities =
-          await ResponsibleService.getCandidateResponsiblities(
+        const candidateSupervisors =
+          await SupervisorService.getCandidateSupervisors(
             candidateId,
             req.params.role_name
           );
-        res.json(createOutput(candidateResponsiblities));
+        res.json(createOutput(candidateSupervisors));
       } catch (error) {
         const errorMessage = (error as ErrorType).message;
         res.status(500).json(createOutput(null, errorMessage));

@@ -1,6 +1,6 @@
 import { AppDataSource } from "../entities/dataSource";
 import { Candidate } from "../entities/Candidate";
-import { Responsible } from "../entities/Responsible";
+import { Supervisor } from "../entities/Supervisor";
 import { Role } from "../entities/Role";
 import { initCandidates } from "../fixture/init_candidates";
 import { initRoles } from "../fixture/init_roles";
@@ -10,9 +10,9 @@ export const GeneralServices = {
     const roleRepo = AppDataSource.getRepository(Role);
     roleRepo.delete({});
 
-    const responsibleRepo = AppDataSource.getRepository(Responsible);
-    responsibleRepo.clear();
-    // responsibleRepo.delete({});
+    const supervisorRepo = AppDataSource.getRepository(Supervisor);
+    supervisorRepo.clear();
+    // supervisorRepo.delete({});
 
     const candidateRepo = AppDataSource.getRepository(Candidate);
     candidateRepo.delete({});
@@ -48,26 +48,26 @@ export const GeneralServices = {
       const savedCandidate = await AppDataSource.manager.save(candidatePayload);
 
       if (
-        candidate.responsibles !== undefined &&
-        candidate.responsibles.length > 0
+        candidate.supervisors !== undefined &&
+        candidate.supervisors.length > 0
       ) {
         let candidateRole = await roleRepo.findOne({
-          where: { title: candidate.responsibles[0].role.title },
+          where: { title: candidate.supervisors[0].role.title },
         });
         if (candidateRole === null) {
           candidateRole = await roleRepo.save({
-            title: candidate.responsibles[0].role.title,
-            creationDate: new Date(candidate.responsibles[0].creationDate),
+            title: candidate.supervisors[0].role.title,
+            creationDate: new Date(candidate.supervisors[0].creationDate),
           });
         }
 
-        let newResponsible = new Responsible();
-        newResponsible.candidate = savedCandidate;
-        newResponsible.role = candidateRole;
-        newResponsible.creationDate = new Date(
-          candidate.responsibles[0].creationDate
+        let newSupervisor = new Supervisor();
+        newSupervisor.candidate = savedCandidate;
+        newSupervisor.role = candidateRole;
+        newSupervisor.creationDate = new Date(
+          candidate.supervisors[0].creationDate
         ).getTime();
-        await AppDataSource.manager.save(newResponsible);
+        await AppDataSource.manager.save(newSupervisor);
       }
     });
 

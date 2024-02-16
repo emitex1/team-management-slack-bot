@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { Candidate } from "./Candidate";
-import { Responsible } from "./Responsible";
+import { Supervisor } from "./Supervisor";
 import { Role } from "./Role";
 import { GeneralServices } from "../services/GeneralServices";
 import { elogGreen, elogRed } from "../util/logHelper";
@@ -9,7 +9,7 @@ import { elogGreen, elogRed } from "../util/logHelper";
 export const AppDataSource = new DataSource({
   type: "sqlite",
   database: "database.sqlite",
-  entities: [Candidate, Responsible, Role],
+  entities: [Candidate, Supervisor, Role],
   synchronize: true,
   logging: false,
 });

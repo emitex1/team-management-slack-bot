@@ -8,7 +8,7 @@ import { WitService } from "./services/WitServices";
 import SessionService from "./services/SessionService";
 import { Context } from "./types/Context";
 import { CandidateService } from "./services/CandidateService";
-import { ResponsibleService } from "./services/ResponsibleService";
+import { SupervisorService } from "./services/SupervisorService";
 import { GeneralServices } from "./services/GeneralServices";
 import cors from "cors";
 import setupSwagger from "./util/setup_swagger";

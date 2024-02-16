@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
-import { Responsible } from "./Responsible";
+import { Supervisor } from "./Supervisor";
 
 @Entity()
 export class Role {
@@ -11,6 +11,6 @@ export class Role {
   @Column({})
   title!: string;
 
-  @OneToMany(() => Responsible, (responsible) => responsible.role)
-  responsibles!: Responsible[];
+  @OneToMany(() => Supervisor, (supervisor) => supervisor.role)
+  supervisors!: Supervisor[];
 }

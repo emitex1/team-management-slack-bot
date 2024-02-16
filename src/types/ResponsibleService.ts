@@ -1,3 +1,3 @@
-import { ResponsibleService } from "../services/ResponsibleService";
+import { SupervisorService } from "../services/SupervisorService";
 
-export type ResponsibleServiceType = typeof ResponsibleService;
+export type SupervisorServiceType = typeof SupervisorService;

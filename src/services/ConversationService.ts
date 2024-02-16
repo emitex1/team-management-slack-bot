@@ -7,7 +7,7 @@ import { getRandomFaceEmoji, getRandomIconEmoji } from "../util/emojiHelpers";
 import { elogRed } from "../util/logHelper";
 import { saveRotatingCircleGif } from "./rouletteWheelService";
 import { CandidateService } from "../services/CandidateService";
-import { ResponsibleService } from "../services/ResponsibleService";
+import { SupervisorService } from "../services/SupervisorService";
 
 export class ConversationService {
   static run = async (text: string, context: Context, witService: any) => {
@@ -40,18 +40,18 @@ export class ConversationService {
     switch (context.conversation.entities.intent) {
       case intents.bye:
         return this.intentBye(context);
-      case intents.select_random_responsible:
-        return this.intentSelectResponsible(context);
+      case intents.select_random_supervisor:
+        return this.intentSelectSupervisor(context);
       case intents.greeting:
         return this.intentGreeting(context);
       case intents.ask_candidates:
         return this.intentAskCandidates(context);
       case intents.add_new_candidate:
         return this.intentAddNewCandidate(context);
-      case intents.add_new_responsible:
-        return this.intentAddNewResponsible(context);
-      case intents.ask_last_three_responsibles:
-        return this.intentAskLastThreeResponsibles(context);
+      case intents.add_new_supervisor:
+        return this.intentAddNewSupervisor(context);
+      case intents.ask_last_three_supervisors:
+        return this.intentAskLastThreeSupervisors(context);
       default:
         return this.noPredefinedIntent(context);
     }
@@ -66,7 +66,7 @@ export class ConversationService {
     return context;
   };
 
-  static intentSelectResponsible = async (context: Context) => {
+  static intentSelectSupervisor = async (context: Context) => {
     const { conversation } = context;
     if (!conversation) return;
 
@@ -87,14 +87,14 @@ export class ConversationService {
 
     const activeCandidates = await CandidateService.readActiveCandidates();
 
-    const lastThreeResponsibles = await ResponsibleService.getLastResponsibles(
+    const lastThreeSupervisors = await SupervisorService.getLastSupervisors(
       neededRole,
       3
     );
 
     const allCandidatesExceptLastThree = activeCandidates.filter((candidate) =>
-      lastThreeResponsibles.every(
-        (responsible) => responsible.candidate.id !== candidate.id
+      lastThreeSupervisors.every(
+        (supervisor) => supervisor.candidate.id !== candidate.id
       )
     );
 
@@ -103,7 +103,7 @@ export class ConversationService {
       (candidate) => candidate.name
     );
     const gifFileName = saveRotatingCircleGif(randomizedCandidateNames);
-    const selectedResponsible = allCandidatesExceptLastThree[0];
+    const selectedSupervisor = allCandidatesExceptLastThree[0];
 
     conversation.followUp =
       "Okay, I randomized the list of candidates as follow:\n" +
@@ -111,7 +111,7 @@ export class ConversationService {
         .map((c, i) => (i + 1).toString() + ". " + c.name)
         .join("\n") +
       "\n\nCongrats `" +
-      selectedResponsible.name +
+      selectedSupervisor.name +
       "` " +
       getRandomFaceEmoji() +
       "\nNow you are the new `" +
@@ -120,13 +120,13 @@ export class ConversationService {
       getRandomIconEmoji();
     conversation.followUpFileName = gifFileName;
 
-    ResponsibleService.addResponsibleIfExists(
-      selectedResponsible.name,
+    SupervisorService.addSupervisorIfExists(
+      selectedSupervisor.name,
       neededRole
     );
 
-    context.log = logsConstants.selectRandomResponsible(
-      selectedResponsible.name,
+    context.log = logsConstants.selectRandomSupervisor(
+      selectedSupervisor.name,
       neededRole
     );
 
@@ -217,56 +217,56 @@ export class ConversationService {
     return context;
   };
 
-  static intentAddNewResponsible = async (context: Context) => {
+  static intentAddNewSupervisor = async (context: Context) => {
     const { conversation } = context;
     if (!conversation) return;
 
-    const newResponsibleName = conversation.entities.candidate;
+    const newSupervisorName = conversation.entities.candidate;
 
-    const newResponsibleRole = conversation.entities.role;
+    const newSupervisorRole = conversation.entities.role;
 
-    if (!newResponsibleName) {
+    if (!newSupervisorName) {
       conversation.followUp =
-        "Sorry, I didn't catch the name of the responsible. :pensive:\nCould you please rephrase it?";
+        "Sorry, I didn't catch the name of the supervisor. :pensive:\nCould you please rephrase it?";
       return context;
     }
 
     try {
-      const lastResponsible = await ResponsibleService.getLastResponsible(
-        newResponsibleRole
+      const lastSupervisor = await SupervisorService.getLastSupervisor(
+        newSupervisorRole
       );
       if (
-        areDatesInSameWeek(new Date(lastResponsible?.creationDate), new Date())
+        areDatesInSameWeek(new Date(lastSupervisor?.creationDate), new Date())
       ) {
         conversation.followUp =
           "Sorry, you can only add one " +
-          newResponsibleRole +
+          newSupervisorRole +
           " per week :no_entry_sign:. the last " +
-          newResponsibleRole +
+          newSupervisorRole +
           " was created on " +
-          new Date(lastResponsible.creationDate).toLocaleDateString();
+          new Date(lastSupervisor.creationDate).toLocaleDateString();
         return context;
       }
 
-      const saveResult = await ResponsibleService.addResponsibleIfExists(
-        newResponsibleName,
-        newResponsibleRole
+      const saveResult = await SupervisorService.addSupervisorIfExists(
+        newSupervisorName,
+        newSupervisorRole
       );
     } catch (errorMessage) {
-      elogRed("error in adding new responsible -> ", errorMessage);
+      elogRed("error in adding new supervisor -> ", errorMessage);
       conversation.followUp =
         "Sorry, there were a problem with adding " +
-        newResponsibleName +
-        " to the responsible list. :x:\n" +
+        newSupervisorName +
+        " to the supervisor list. :x:\n" +
         errorMessage;
       return context;
     }
 
-    const lastThreeResponsibles = await ResponsibleService.getLastResponsibles(
-      newResponsibleRole,
+    const lastThreeSupervisors = await SupervisorService.getLastSupervisors(
+      newSupervisorRole,
       3
     );
-    const lastThreeResponsiblesInStr = lastThreeResponsibles
+    const lastThreeSupervisorsInStr = lastThreeSupervisors
       .map(
         (r) =>
           "`" +
@@ -281,42 +281,44 @@ export class ConversationService {
 
     conversation.followUp =
       "Okay, I added `" +
-      newResponsibleName +
+      newSupervisorName +
       "` to the `" +
-      newResponsibleRole +
+      newSupervisorRole +
       "` list :star-struck:.\n" +
-      lastThreeResponsiblesInStr;
+      lastThreeSupervisorsInStr;
 
-    context.log = logsConstants.addNewResponsible(
-      newResponsibleName,
-      newResponsibleRole
+    context.log = logsConstants.addNewSupervisor(
+      newSupervisorName,
+      newSupervisorRole
     );
     return context;
   };
 
-  static intentAskLastThreeResponsibles = async (context: Context) => {
+  static intentAskLastThreeSupervisors = async (context: Context) => {
     const { conversation } = context;
     if (!conversation) return;
 
-    const askedResponsibleRole = conversation.entities.role;
+    const askedSupervisorRole = conversation.entities.role;
 
-    if (!askedResponsibleRole) {
+    if (!askedSupervisorRole) {
       conversation.followUp =
-        "Sorry, Which role do you want to see the last persons responsible for? :thinking_face:\nCould you please rephrase it?";
+        "Sorry, Which role do you want to see the last persons supervisor for? :thinking_face:\nCould you please rephrase it?";
       return context;
     }
 
     try {
-      const lastThreeResponsibles =
-        await ResponsibleService.getLastResponsibles(askedResponsibleRole, 3);
+      const lastThreeSupervisors = await SupervisorService.getLastSupervisors(
+        askedSupervisorRole,
+        3
+      );
 
-      if (lastThreeResponsibles.length === 0) {
-        conversation.followUp = `Sorry, there is no ${askedResponsibleRole} registered yet in the list. :x:`;
+      if (lastThreeSupervisors.length === 0) {
+        conversation.followUp = `Sorry, there is no ${askedSupervisorRole} registered yet in the list. :x:`;
         return context;
       }
 
-      const lastThreeResponsiblesInStr =
-        lastThreeResponsibles
+      const lastThreeSupervisorsInStr =
+        lastThreeSupervisors
           .map(
             (r) =>
               r.candidate.name +
@@ -328,15 +330,15 @@ export class ConversationService {
           .join("`\n`") + "`";
       conversation.followUp =
         "Okay, Here are the last three " +
-        askedResponsibleRole +
+        askedSupervisorRole +
         "s: :point_down:\n`" +
-        lastThreeResponsiblesInStr;
+        lastThreeSupervisorsInStr;
       return context;
     } catch (errorMessage) {
-      elogRed("error in reading new responsibles -> ", errorMessage);
+      elogRed("error in reading new supervisors -> ", errorMessage);
       conversation.followUp =
         "Sorry, there were a problem with reading the last three " +
-        askedResponsibleRole +
+        askedSupervisorRole +
         ". :x:\n" +
         errorMessage;
       return context;

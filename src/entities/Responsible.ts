@@ -3,7 +3,7 @@ import { Candidate } from "./Candidate";
 import { Role } from "./Role";
 
 @Entity()
-export class Responsible {
+export class Supervisor {
   constructor() {
     this.creationDate = Date.now() / 1;
   }
@@ -14,9 +14,9 @@ export class Responsible {
   @Column({})
   creationDate: number;
 
-  @ManyToOne(() => Candidate, (candidate) => candidate.responsibles)
+  @ManyToOne(() => Candidate, (candidate) => candidate.supervisors)
   candidate!: Candidate;
 
-  @ManyToOne(() => Role, (role) => role.responsibles)
+  @ManyToOne(() => Role, (role) => role.supervisors)
   role!: Role;
 }

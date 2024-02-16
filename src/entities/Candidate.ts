@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
-import { Responsible } from "./Responsible";
+import { Supervisor } from "./Supervisor";
 
 @Entity()
 export class Candidate {
@@ -44,6 +44,6 @@ export class Candidate {
   @Column({ nullable: true })
   editionDate: number;
 
-  @OneToMany(() => Responsible, (responsible) => responsible.candidate)
-  responsibles!: Responsible[];
+  @OneToMany(() => Supervisor, (supervisor) => supervisor.candidate)
+  supervisors!: Supervisor[];
 }

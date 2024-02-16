@@ -6,14 +6,14 @@ export const logsConstants = {
     (isFromAdminPanel ? " from the admin panel" : "") +
     ".",
 
-  addNewResponsible: (userName: string, roleName: string) =>
+  addNewSupervisor: (userName: string, roleName: string) =>
     ":mega: `" +
     userName +
     "` has been designated as the new `" +
     roleName +
     "`.",
 
-  selectRandomResponsible: (userName: string, roleName: string) =>
+  selectRandomSupervisor: (userName: string, roleName: string) =>
     ":mega: `" +
     userName +
     "` has been selected as the new `" +
