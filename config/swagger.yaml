@@ -26,8 +26,8 @@ servers:
   - url: http://localhost:3001/api/webpanel/
   - url: http://34.41.198.14:3001/api/webpanel/
 tags:
-  - name: Candidate
-    description: Everything about the candidates
+  - name: Teammate
+    description: Everything about the teammates
     # externalDocs:
     #   description: Find out more
     #   url: http://swagger.io
@@ -35,13 +35,13 @@ tags:
     description: Read Supervisor related information
 
 paths:
-  /candidates:
+  /teammates:
     get:
       tags:
-        - Candidate
-      summary: Finds Candidates by name and activity status
+        - Teammate
+      summary: Finds Teammates by name and activity status
       description: A search term and a activity status can be provided with comma separated strings
-      operationId: getCandidates
+      operationId: getTeammates
       parameters:
         - name: isActive
           in: query
@@ -75,7 +75,7 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: "#/components/schemas/Candidate"
+                      $ref: "#/components/schemas/Teammate"
                   pagination:
                     $ref: "#/components/schemas/Pagination"
         "500":
@@ -87,22 +87,22 @@ paths:
 
     post:
       tags:
-        - Candidate
-      summary: Add a new candidate to the list
-      description: Add a new candidate to the list
-      operationId: addCandidate
+        - Teammate
+      summary: Add a new teammate to the list
+      description: Add a new teammate to the list
+      operationId: addTeammate
       requestBody:
-        description: Create a new candidate in the list
+        description: Create a new teammate in the list
         content:
           application/json:
             schema:
-              $ref: "#/components/requestBodies/CandidateBody"
+              $ref: "#/components/requestBodies/TeammateBody"
           application/xml:
             schema:
-              $ref: "#/components/requestBodies/CandidateBody"
+              $ref: "#/components/requestBodies/TeammateBody"
           application/x-www-form-urlencoded:
             schema:
-              $ref: "#/components/requestBodies/CandidateBody"
+              $ref: "#/components/requestBodies/TeammateBody"
         required: true
       responses:
         "200":
@@ -110,26 +110,26 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Candidate"
+                $ref: "#/components/schemas/Teammate"
             application/xml:
               schema:
-                $ref: "#/components/schemas/Candidate"
+                $ref: "#/components/schemas/Teammate"
         "400":
           description: Invalid input
         "422":
           description: Validation exception
 
-  /candidate/{candidate_id}:
+  /teammate/{teammate_id}:
     get:
       tags:
-        - Candidate
-      summary: Find candidate by ID
-      description: Returns a single candidate
-      operationId: getCandidateById
+        - Teammate
+      summary: Find teammate by ID
+      description: Returns a single teammate
+      operationId: getTeammateById
       parameters:
-        - name: candidate_id
+        - name: teammate_id
           in: path
-          description: ID of candidate to return
+          description: ID of teammate to return
           required: true
           schema:
             type: string
@@ -145,11 +145,11 @@ paths:
                     type: string
                     example: Data read successfully
                   data:
-                    $ref: "#/components/schemas/Candidate"
+                    $ref: "#/components/schemas/Teammate"
         "400":
           description: Invalid ID supplied
         "404":
-          description: Candidate not found
+          description: Teammate not found
       # security:
       #   - api_key: []
       #   - petstore_auth:
@@ -158,29 +158,29 @@ paths:
 
     put:
       tags:
-        - Candidate
-      summary: Update an existing candidate
-      description: Update an existing candidate by Id
-      operationId: updateCandidate
+        - Teammate
+      summary: Update an existing teammate
+      description: Update an existing teammate by Id
+      operationId: updateTeammate
       parameters:
-        - name: candidate_id
+        - name: teammate_id
           in: path
-          description: ID of candidate to edit
+          description: ID of teammate to edit
           required: true
           schema:
             type: string
       requestBody:
-        description: Update an existent candidate
+        description: Update an existent teammate
         content:
           application/json:
             schema:
-              $ref: "#/components/requestBodies/CandidateBody"
+              $ref: "#/components/requestBodies/TeammateBody"
           application/xml:
             schema:
-              $ref: "#/components/requestBodies/CandidateBody"
+              $ref: "#/components/requestBodies/TeammateBody"
           application/x-www-form-urlencoded:
             schema:
-              $ref: "#/components/requestBodies/CandidateBody"
+              $ref: "#/components/requestBodies/TeammateBody"
         required: true
       responses:
         "200":
@@ -188,28 +188,28 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Candidate"
+                $ref: "#/components/schemas/Teammate"
             application/xml:
               schema:
-                $ref: "#/components/schemas/Candidate"
+                $ref: "#/components/schemas/Teammate"
         "400":
           description: Invalid ID supplied
         "404":
-          description: Candidate not found
+          description: Teammate not found
         "422":
           description: Validation exception
 
-  /candidate/{candidate_id}/deactivate:
+  /teammate/{teammate_id}/deactivate:
     put:
       tags:
-        - Candidate
-      summary: Deactivate an existing candidate
-      description: Deactivate an existing candidate
-      operationId: deactivateCandidate
+        - Teammate
+      summary: Deactivate an existing teammate
+      description: Deactivate an existing teammate
+      operationId: deactivateTeammate
       parameters:
-        - name: candidate_id
+        - name: teammate_id
           in: path
-          description: ID of candidate to deactivate
+          description: ID of teammate to deactivate
           required: true
           schema:
             type: string
@@ -219,14 +219,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Candidate"
+                $ref: "#/components/schemas/Teammate"
             application/xml:
               schema:
-                $ref: "#/components/schemas/Candidate"
+                $ref: "#/components/schemas/Teammate"
         "400":
           description: Invalid ID supplied
         "404":
-          description: Candidate not found
+          description: Teammate not found
         "422":
           description: Validation exception
 
@@ -267,15 +267,15 @@ paths:
         "400":
           description: Invalid ID supplied
         "404":
-          description: Candidate not found
+          description: Teammate not found
 
-  /roles/{role_name}/{candidate_id}:
+  /roles/{role_name}/{teammate_id}:
     get:
       tags:
         - Supervisor
-      summary: Find supervisor according to the candidate ID
-      description: Returns the list of supervisors related to the candidate
-      operationId: getSupervisorsByCandidateId
+      summary: Find supervisor according to the teammate ID
+      description: Returns the list of supervisors related to the teammate
+      operationId: getSupervisorsByTeammateId
       parameters:
         - name: role_name
           in: path
@@ -283,9 +283,9 @@ paths:
           required: true
           schema:
             type: string
-        - name: candidate_id
+        - name: teammate_id
           in: path
-          description: ID of the candidate
+          description: ID of the teammate
           required: true
           schema:
             type: string
@@ -321,9 +321,9 @@ components:
         rowsPerPage:
           type: number
 
-    Candidate:
+    Teammate:
       allOf:
-        - $ref: "#/components/requestBodies/CandidateBody"
+        - $ref: "#/components/requestBodies/TeammateBody"
         - type: object
           properties:
             id:
@@ -351,8 +351,8 @@ components:
           type: number
           description: A timestamp indicates the date of create
           example: 1705842561342
-        candidate:
-          $ref: "#/components/schemas/Candidate"
+        teammate:
+          $ref: "#/components/schemas/Teammate"
         role:
           $ref: "#/components/schemas/RoleA"
 
@@ -372,7 +372,7 @@ components:
           example: RoleA
 
   requestBodies:
-    CandidateBody:
+    TeammateBody:
       type: object
       properties:
         name:

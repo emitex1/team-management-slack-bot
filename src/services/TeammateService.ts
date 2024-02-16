@@ -1,91 +1,91 @@
 import { AppDataSource } from "../entities/dataSource";
-import { Candidate } from "../entities/Candidate";
+import { Teammate } from "../entities/Teammate";
 
-export const CandidateService = {
-  readAllCandidates: async () => {
-    const candidates = await AppDataSource.manager.find(Candidate);
+export const TeammateService = {
+  readAllTeammates: async () => {
+    const teammates = await AppDataSource.manager.find(Teammate);
 
-    return candidates;
+    return teammates;
   },
 
-  searchCandidates: async (searchTerm?: string, isActive?: boolean) => {
-    const candidatesRepository = AppDataSource.getRepository(Candidate);
-    const candidates = candidatesRepository.createQueryBuilder("candidate");
+  searchTeammates: async (searchTerm?: string, isActive?: boolean) => {
+    const teammatesRepository = AppDataSource.getRepository(Teammate);
+    const teammates = teammatesRepository.createQueryBuilder("teammate");
 
     if (isActive !== undefined) {
-      candidates.andWhere("isActive = :isActive", { isActive });
+      teammates.andWhere("isActive = :isActive", { isActive });
     }
 
     if (searchTerm) {
-      candidates.andWhere("LOWER(candidate.name) LIKE LOWER(:searchTerm)", {
+      teammates.andWhere("LOWER(teammate.name) LIKE LOWER(:searchTerm)", {
         searchTerm: `%${searchTerm}%`,
       });
     }
 
-    return await candidates.getMany();
+    return await teammates.getMany();
   },
 
-  readActiveCandidates: async () => {
-    const candidatesRepository = AppDataSource.getRepository(Candidate);
-    const activeCandidates = await candidatesRepository.find({
+  readActiveTeammates: async () => {
+    const teammatesRepository = AppDataSource.getRepository(Teammate);
+    const activeTeammates = await teammatesRepository.find({
       where: { isActive: true },
     });
-    return activeCandidates;
+    return activeTeammates;
   },
 
-  readCandidateById: async (id: string) => {
-    const candidatesRepository = AppDataSource.getRepository(Candidate);
-    const candidate = await candidatesRepository.findOneBy({ id });
-    return candidate;
+  readTeammateById: async (id: string) => {
+    const teammatesRepository = AppDataSource.getRepository(Teammate);
+    const teammate = await teammatesRepository.findOneBy({ id });
+    return teammate;
   },
 
-  readCandidateByName: async (name: string) => {
-    const candidatesRepository = AppDataSource.getRepository(Candidate);
+  readTeammateByName: async (name: string) => {
+    const teammatesRepository = AppDataSource.getRepository(Teammate);
 
-    const candidate = await candidatesRepository
-      .createQueryBuilder("candidate")
-      .where("LOWER(candidate.name) = LOWER(:name)", { name })
-      .andWhere("candidate.isActive = true")
+    const teammate = await teammatesRepository
+      .createQueryBuilder("teammate")
+      .where("LOWER(teammate.name) = LOWER(:name)", { name })
+      .andWhere("teammate.isActive = true")
       .getOne();
-    return candidate;
+    return teammate;
   },
 
-  addCandidate: async (
+  addTeammate: async (
     name: string,
     title?: string,
     lastName?: string,
     userName?: string
   ) => {
     if (!name || !name.trim())
-      return Promise.reject("Candidate name is required");
+      return Promise.reject("Teammate name is required");
 
-    const candidate = new Candidate();
-    candidate.name = name;
-    candidate.title = title;
-    candidate.lastName = lastName;
-    candidate.userName = userName;
+    const teammate = new Teammate();
+    teammate.name = name;
+    teammate.title = title;
+    teammate.lastName = lastName;
+    teammate.userName = userName;
 
-    const candidatesRepository = AppDataSource.getRepository(Candidate);
-    const savedCandidate = await candidatesRepository.save(candidate);
+    const teammatesRepository = AppDataSource.getRepository(Teammate);
+    const savedTeammate = await teammatesRepository.save(teammate);
     // commit the transaction before returning the result
-    return savedCandidate;
+    return savedTeammate;
   },
 
-  deactivateCandidate: async (candidate: Candidate) => {
-    const candidatesRepository = AppDataSource.getRepository(Candidate);
-    candidate.isActive = false;
-    candidate.editionDate = Date.now() / 1;
-    const savedCandidate = await candidatesRepository.save(candidate);
+  deactivateTeammate: async (teammate: Teammate) => {
+    const teammatesRepository = AppDataSource.getRepository(Teammate);
+    teammate.isActive = false;
+    teammate.editionDate = Date.now() / 1;
+    const savedTeammate = await teammatesRepository.save(teammate);
 
-    return savedCandidate;
+    return savedTeammate;
   },
 
-  updateCandidate: async (candidate: Candidate) => {
-    const candidatesRepository = AppDataSource.getRepository(Candidate);
-    candidate.editionDate = Date.now() / 1;
-    const updateResult = await candidatesRepository.update(
-      candidate.id,
-      candidate
+  updateTeammate: async (teammate: Teammate) => {
+    const teammatesRepository = AppDataSource.getRepository(Teammate);
+    teammate.editionDate = Date.now() / 1;
+    const updateResult = await teammatesRepository.update(
+      teammate.id,
+      teammate
     );
     return updateResult;
   },

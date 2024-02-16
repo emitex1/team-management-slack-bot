@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
-import { Candidate } from "./Candidate";
+import { Teammate } from "./Teammate";
 import { Role } from "./Role";
 
 @Entity()
@@ -14,8 +14,8 @@ export class Supervisor {
   @Column({})
   creationDate: number;
 
-  @ManyToOne(() => Candidate, (candidate) => candidate.supervisors)
-  candidate!: Candidate;
+  @ManyToOne(() => Teammate, (teammate) => teammate.supervisors)
+  teammate!: Teammate;
 
   @ManyToOne(() => Role, (role) => role.supervisors)
   role!: Role;

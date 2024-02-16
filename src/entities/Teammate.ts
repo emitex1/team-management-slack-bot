@@ -2,7 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
 import { Supervisor } from "./Supervisor";
 
 @Entity()
-export class Candidate {
+export class Teammate {
   constructor() {
     this.name = "";
     this.isActive = true;
@@ -44,6 +44,6 @@ export class Candidate {
   @Column({ nullable: true })
   editionDate: number;
 
-  @OneToMany(() => Supervisor, (supervisor) => supervisor.candidate)
+  @OneToMany(() => Supervisor, (supervisor) => supervisor.teammate)
   supervisors!: Supervisor[];
 }

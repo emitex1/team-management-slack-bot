@@ -1,4 +1,4 @@
-export const initCandidates = [
+export const initTeammates = [
   {
     name: "Emad",
     lastName: "Armoun",

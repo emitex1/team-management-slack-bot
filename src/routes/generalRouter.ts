@@ -62,14 +62,14 @@ export const generalRouter = () => {
     }
   });
 
-  router.get("/init_candidates", async (_req: Request, res: Response) => {
+  router.get("/init_teammates", async (_req: Request, res: Response) => {
     const clearResult = await GeneralServices.clearAll();
     if (clearResult !== true) {
       res.send("Error in removing the data: " + clearResult);
       return;
     }
 
-    const initTestResult = await GeneralServices.initializeCandidates();
+    const initTestResult = await GeneralServices.initializeTeammates();
     if (initTestResult !== true) {
       res.send("Error in initializing the test data: " + initTestResult);
       return;

@@ -6,5 +6,5 @@ database.sqlite
 dist
 .env.myworkspace
 roulette_wheel.gif
-src/fixture/init_candidates.ts
+src/fixture/init_teammates.ts
 src/fixture/init_roles.ts

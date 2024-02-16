@@ -20,12 +20,12 @@ export const logsConstants = {
     roleName +
     "`.",
 
-  updateCandidate: (userName: string) =>
+  updateTeammate: (userName: string) =>
     ":pencil2: The information of the user `" +
     userName +
     "` has been updated from the admin panel.",
 
-  deactivateCandidate: (userName: string) =>
+  deactivateTeammate: (userName: string) =>
     ":no_entry_sign: The user `" +
     userName +
     "` has been deactivated from the admin panel.",

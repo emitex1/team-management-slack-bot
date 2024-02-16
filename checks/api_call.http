@@ -1,4 +1,4 @@
-POST http://localhost:3001/api/webpanel/candidates HTTP/1.1
+POST http://localhost:3001/api/webpanel/teammates HTTP/1.1
 content-type: application/json
 
 {
@@ -10,51 +10,51 @@ content-type: application/json
 
 ###
 
-http://localhost:3001/api/webpanel/candidates
+http://localhost:3001/api/webpanel/teammates
 
 ###
 
-http://localhost:3001/api/webpanel/candidates?isActive=true
+http://localhost:3001/api/webpanel/teammates?isActive=true
 
 
 ###
 
-http://localhost:3001/api/webpanel/candidates?isActive=false
+http://localhost:3001/api/webpanel/teammates?isActive=false
 
 ###
 
-http://localhost:3001/api/webpanel/candidates?search=as
+http://localhost:3001/api/webpanel/teammates?search=as
 
 ###
 
-http://localhost:3001/api/webpanel/candidates?search=as&isActive=true
+http://localhost:3001/api/webpanel/teammates?search=as&isActive=true
 
 ###
 
-http://localhost:3001/api/webpanel/candidates?search=as&isActive=false
+http://localhost:3001/api/webpanel/teammates?search=as&isActive=false
 
 ###
 
-http://localhost:3001/api/webpanel/candidate/wrong_candidate_id
+http://localhost:3001/api/webpanel/teammate/wrong_teammate_id
 
 ###
 
-http://localhost:3001/api/webpanel/candidate/028ffb5b-3b51-49a8-8af9-f9496123160e
+http://localhost:3001/api/webpanel/teammate/028ffb5b-3b51-49a8-8af9-f9496123160e
 
 ###
 
-PUT http://localhost:3001/api/webpanel/candidate/028ffb5b-3b51-49a8-8af9-f9496123160e/deactivate
+PUT http://localhost:3001/api/webpanel/teammate/028ffb5b-3b51-49a8-8af9-f9496123160e/deactivate
 
 ###
 
-PUT http://localhost:3001/api/webpanel/candidate/1 HTTP/1.1
+PUT http://localhost:3001/api/webpanel/teammate/1 HTTP/1.1
 content-type: application/json
 
 {}
 
 ###
 
-PUT http://localhost:3001/api/webpanel/candidate/wrong_id HTTP/1.1
+PUT http://localhost:3001/api/webpanel/teammate/wrong_id HTTP/1.1
 content-type: application/json
 
 {
@@ -63,7 +63,7 @@ content-type: application/json
 
 ###
 
-PUT http://localhost:3001/api/webpanel/candidate/028ffb5b-3b51-49a8-8af9-f9496123160e HTTP/1.1
+PUT http://localhost:3001/api/webpanel/teammate/028ffb5b-3b51-49a8-8af9-f9496123160e HTTP/1.1
 content-type: application/json
 
 {
@@ -72,7 +72,7 @@ content-type: application/json
 
 ###
 
-PUT http://localhost:3001/api/webpanel/candidate/028ffb5b-3b51-49a8-8af9-f9496123160e HTTP/1.1
+PUT http://localhost:3001/api/webpanel/teammate/028ffb5b-3b51-49a8-8af9-f9496123160e HTTP/1.1
 content-type: application/json
 
 {

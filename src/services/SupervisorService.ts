@@ -1,10 +1,10 @@
 import { AppDataSource } from "../entities/dataSource";
-import { Candidate } from "../entities/Candidate";
+import { Teammate } from "../entities/Teammate";
 import { Supervisor } from "../entities/Supervisor";
 import { Role } from "../entities/Role";
 import { elog } from "../util/logHelper";
 import { RoleService } from "./RoleService";
-import { CandidateService } from "./CandidateService";
+import { TeammateService } from "./TeammateService";
 
 export const SupervisorService = {
   getLastSupervisor: async (roleName: string) => {
@@ -34,7 +34,7 @@ export const SupervisorService = {
     const supervisorRepository = AppDataSource.getRepository(Supervisor);
     const lastThreeSupervisors = await supervisorRepository
       .createQueryBuilder("supervisor")
-      .leftJoinAndSelect("supervisor.candidate", "candidate")
+      .leftJoinAndSelect("supervisor.teammate", "teammate")
       .leftJoinAndSelect("supervisor.role", "role")
       .where({ role: role })
       .orderBy("supervisor.creationDate", "DESC")
@@ -44,33 +44,33 @@ export const SupervisorService = {
     return lastThreeSupervisors;
   },
 
-  getCandidateSupervisors: async (candidateId: string, roleName: string) => {
+  getTeammateSupervisors: async (teammateId: string, roleName: string) => {
     const role = await RoleService.getRoleByName(roleName);
     if (!role) {
       throw new Error(`Role with name ${roleName} not found`);
     }
 
     const supervisorRepository = AppDataSource.getRepository(Supervisor);
-    const candidateSupervisors = await supervisorRepository
+    const teammateSupervisors = await supervisorRepository
       .createQueryBuilder("supervisor")
-      .leftJoinAndSelect("supervisor.candidate", "candidate")
+      .leftJoinAndSelect("supervisor.teammate", "teammate")
       .leftJoinAndSelect("supervisor.role", "role")
       .where({ role: role })
-      .andWhere({ candidate: { id: candidateId } })
+      .andWhere({ teammate: { id: teammateId } })
       .orderBy("supervisor.creationDate", "DESC")
       .getMany();
 
-    return candidateSupervisors;
+    return teammateSupervisors;
   },
 
-  addSupervisorIfExists: async (candidateName: string, roleName: string) => {
-    const candidatesRepository = AppDataSource.getRepository(Candidate);
-    const candidate = await candidatesRepository.findOneBy({
-      name: candidateName,
+  addSupervisorIfExists: async (teammateName: string, roleName: string) => {
+    const teammatesRepository = AppDataSource.getRepository(Teammate);
+    const teammate = await teammatesRepository.findOneBy({
+      name: teammateName,
     });
 
-    if (!candidate) {
-      throw new Error(`Candidate with name "${candidateName}" not found`);
+    if (!teammate) {
+      throw new Error(`Teammate with name "${teammateName}" not found`);
     }
 
     const role = await RoleService.getRoleByName(roleName);
@@ -79,7 +79,7 @@ export const SupervisorService = {
     }
 
     const supervisor = new Supervisor();
-    supervisor.candidate = candidate;
+    supervisor.teammate = teammate;
     supervisor.role = role;
 
     const supervisorRepository = AppDataSource.getRepository(Supervisor);
@@ -87,14 +87,14 @@ export const SupervisorService = {
     return savedSupervisor;
   },
 
-  addSupervisor: async (candidateId: string) => {
-    const candidate = await CandidateService.readCandidateById(candidateId);
-    if (!candidate) {
-      throw new Error(`Candidate with id ${candidateId} not found`);
+  addSupervisor: async (teammateId: string) => {
+    const teammate = await TeammateService.readTeammateById(teammateId);
+    if (!teammate) {
+      throw new Error(`Teammate with id ${teammateId} not found`);
     }
 
     const supervisor = new Supervisor();
-    supervisor.candidate = candidate;
+    supervisor.teammate = teammate;
 
     const supervisorRepository = AppDataSource.getRepository(Supervisor);
     const savedSupervisor = await supervisorRepository.save(supervisor);
@@ -104,7 +104,7 @@ export const SupervisorService = {
   readAll: async () => {
     const supervisorRepository = AppDataSource.getRepository(Supervisor);
     const supervisors = await supervisorRepository.find({
-      relations: { candidate: true, role: true },
+      relations: { teammate: true, role: true },
     });
     return supervisors;
   },

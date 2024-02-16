@@ -27,14 +27,14 @@ Boundary(slackbotBoundary, "SlackBot Boundary") {
         AI based conversation service
     end note
 
-    DEV_NODEJS(candidateService, Candidate Service, rectangle, blue)
+    DEV_NODEJS(teammateService, Teammate Service, rectangle, blue)
     DEV_SQLLITE(database,SQLite Database,database,red)
 
     Rel(routes, slackService, "onMention / onMessage")
     Rel(slackService, sessionService, "get/set a Session")
     Rel(slackService, witService, "get a follow up answer")
-    Rel(witService, candidateService, "CRUD")
-    Rel(candidateService, database, "CRUD")
+    Rel(witService, teammateService, "CRUD")
+    Rel(teammateService, database, "CRUD")
 }
 
 Rel(slack, routes, "Send Events")
