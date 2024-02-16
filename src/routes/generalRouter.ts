@@ -6,7 +6,7 @@ export const generalRouter = () => {
   const router = express.Router();
 
   // Version api
-  router.get("/version", (req: Request, res: Response) => {
+  router.get("/version", (_req: Request, res: Response) => {
     const currentVersion = require("../../package.json").version;
     res.send("v." + currentVersion.toString());
   });
