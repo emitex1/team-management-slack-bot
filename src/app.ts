@@ -7,12 +7,8 @@ import { webPanelRouter } from "./routes/webPanelRoutes";
 import { WitService } from "./services/WitServices";
 import SessionService from "./services/SessionService";
 import { Context } from "./types/Context";
-import { CandidateService } from "./services/CandidateService";
-import { SupervisorService } from "./services/SupervisorService";
-import { GeneralServices } from "./services/GeneralServices";
 import cors from "cors";
 import setupSwagger from "./util/setup_swagger";
-import { RoleService } from "./services/RoleService";
 import { generalRouter } from "./routes/generalRouter";
 import { elog } from "./util/logHelper";
 import { nowDate, nowTime } from "./util/dateHelpers";
@@ -59,7 +55,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/api/webpanel", webPanelRouter(configs));
 
 // General api endpoints
-app.use("/api", generalRouter(GeneralServices));
+app.use("/api", generalRouter());
 
 // a basic api endpoint for test
 app.get("/api/hi", (req: Request, res: Response) => {
