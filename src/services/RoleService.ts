@@ -15,13 +15,17 @@ export const RoleService = {
     return roles;
   },
 
-  isValidRole: async (title: string) => {
+  getRoleByName: async (title: string) => {
     const roleRepository = AppDataSource.getRepository(Role);
     const role = await roleRepository
       .createQueryBuilder()
       .select("*")
       .where(`LOWER(title) = '${title.toLowerCase()}'`)
       .getRawOne();
-    return !!role;
+    return role;
+  },
+
+  isValidRole: async (title: string) => {
+    return !!RoleService.getRoleByName(title);
   },
 };

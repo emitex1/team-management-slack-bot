@@ -3,16 +3,12 @@ import { Candidate } from "../entities/Candidate";
 import { Responsible } from "../entities/Responsible";
 import { Role } from "../entities/Role";
 import { elog } from "../util/logHelper";
+import { RoleService } from "./RoleService";
+import { CandidateService } from "./CandidateService";
 
 export const ResponsibleService = {
   getLastResponsible: async (roleName: string) => {
-    const roleRepository = AppDataSource.getRepository(Role);
-    const role = await roleRepository
-      .createQueryBuilder()
-      .select("*")
-      .where(`LOWER(title) = '${roleName.toLowerCase()}'`)
-      .getRawOne();
-
+    const role = await RoleService.getRoleByName(roleName);
     if (!role) {
       throw new Error(`Role with name ${roleName} not found`);
     }
@@ -30,13 +26,7 @@ export const ResponsibleService = {
   },
 
   getLastResponsibles: async (roleName: string, limitation?: number) => {
-    const roleRepository = AppDataSource.getRepository(Role);
-    const role = await roleRepository
-      .createQueryBuilder()
-      .select("*")
-      .where(`LOWER(title) = '${roleName.toLowerCase()}'`)
-      .getRawOne();
-
+    const role = await RoleService.getRoleByName(roleName);
     if (!role) {
       throw new Error(`Role with name ${roleName} not found`);
     }
@@ -58,13 +48,7 @@ export const ResponsibleService = {
     candidateId: string,
     roleName: string
   ) => {
-    const roleRepository = AppDataSource.getRepository(Role);
-    const role = await roleRepository
-      .createQueryBuilder()
-      .select("*")
-      .where(`LOWER(title) = '${roleName.toLowerCase()}'`)
-      .getRawOne();
-
+    const role = await RoleService.getRoleByName(roleName);
     if (!role) {
       throw new Error(`Role with name ${roleName} not found`);
     }
@@ -92,13 +76,7 @@ export const ResponsibleService = {
       throw new Error(`Candidate with name "${candidateName}" not found`);
     }
 
-    const roleRepository = AppDataSource.getRepository(Role);
-    const role = await roleRepository
-      .createQueryBuilder()
-      .select("*")
-      .where(`LOWER(title) = '${roleName.toLowerCase()}'`)
-      .getRawOne();
-
+    const role = await RoleService.getRoleByName(roleName);
     if (!role) {
       throw new Error(`Role with name ${roleName} not found`);
     }
@@ -113,11 +91,7 @@ export const ResponsibleService = {
   },
 
   addResponsible: async (candidateId: string) => {
-    const candidatesRepository = AppDataSource.getRepository(Candidate);
-    const candidate = await candidatesRepository.findOneBy({
-      id: candidateId,
-    });
-
+    const candidate = await CandidateService.readCandidateById(candidateId);
     if (!candidate) {
       throw new Error(`Candidate with id ${candidateId} not found`);
     }
