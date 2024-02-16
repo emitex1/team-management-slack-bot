@@ -49,26 +49,14 @@ const witService = WitService(configs.wit.toekn!);
 const sessionService = SessionService<Context>();
 
 // SlackBot api endpoints
-app.use(
-  "/api/slackbot",
-  slackRouter(
-    configs,
-    witService,
-    sessionService,
-    CandidateService,
-    ResponsibleService
-  )
-);
+app.use("/api/slackbot", slackRouter(configs, witService, sessionService));
 
 // Add a json parser middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Web Panel api endpoints
-app.use(
-  "/api/webpanel",
-  webPanelRouter(configs, CandidateService, ResponsibleService, RoleService)
-);
+app.use("/api/webpanel", webPanelRouter(configs));
 
 // General api endpoints
 app.use("/api", generalRouter(GeneralServices));

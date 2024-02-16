@@ -9,8 +9,6 @@ import { Session } from "../types/Session";
 import { MentionEvent } from "../types/Slack";
 import { Context } from "../types/Context";
 import { ConversationService } from "./ConversationService";
-import { CandidateServiceType } from "../types/CandidateService";
-import { ResponsibleServiceType } from "../types/ResponsibleService";
 import { configs } from "../configs";
 import { elogRed } from "../util/logHelper";
 
@@ -18,9 +16,7 @@ export const handleMention = async (
   event: MentionEvent,
   witService: any,
   slackWebClient: WebClient,
-  sessionService: any,
-  candidateService: CandidateServiceType,
-  responsibleService: ResponsibleServiceType
+  sessionService: any
 ) => {
   const senderInfo = await getUserInfo(slackWebClient, event.user);
 
@@ -45,23 +41,14 @@ export const handleMention = async (
     };
   }
 
-  processSlackEvent(
-    event,
-    witService,
-    slackWebClient,
-    session,
-    candidateService,
-    responsibleService
-  );
+  processSlackEvent(event, witService, slackWebClient, session);
 };
 
 export const handleMessage = async (
   event: MentionEvent,
   witService: any,
   slackWebClient: WebClient,
-  sessionService: any,
-  candidateService: CandidateServiceType,
-  responsibleService: ResponsibleServiceType
+  sessionService: any
 ) => {
   const sessionId = createSessionId(
     event.channel,
@@ -71,23 +58,14 @@ export const handleMessage = async (
   let session: Session<Context> = sessionService.get(sessionId);
 
   if (!session) return false;
-  processSlackEvent(
-    event,
-    witService,
-    slackWebClient,
-    session,
-    candidateService,
-    responsibleService
-  );
+  processSlackEvent(event, witService, slackWebClient, session);
 };
 
 const processSlackEvent = async (
   event: MentionEvent,
   witService: any,
   slackWebClient: WebClient,
-  session: Session<Context>,
-  candidateService: CandidateServiceType,
-  responsibleService: ResponsibleServiceType
+  session: Session<Context>
 ) => {
   const mention = /<@[A-Z0-9]+>/;
   const eventText = event.text.replace(mention, "").trim();
@@ -95,9 +73,7 @@ const processSlackEvent = async (
   const context = await ConversationService.run(
     eventText,
     session.context,
-    witService,
-    candidateService,
-    responsibleService
+    witService
   );
   let answer = "";
   let answerFileName;

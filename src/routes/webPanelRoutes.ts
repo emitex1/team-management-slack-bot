@@ -1,19 +1,14 @@
 import express, { Request, Response } from "express";
 import { ConfigType } from "../configs";
-import { CandidateServiceType } from "../types/CandidateService";
-import { ResponsibleServiceType } from "../types/ResponsibleService";
 import { ErrorType } from "../types/Other";
 import { createOutput } from "../util/apiHelpers";
 import { sendToLogChannel } from "../services/slackServices";
 import { logsConstants } from "../constants/logs";
-import { RoleServiceType } from "../types/RoleService";
+import { CandidateService } from "../services/CandidateService";
+import { RoleService } from "../services/RoleService";
+import { ResponsibleService } from "../services/ResponsibleService";
 
-export const webPanelRouter = (
-  configs: ConfigType,
-  candidateService: CandidateServiceType,
-  responsibleService: ResponsibleServiceType,
-  roleService: RoleServiceType
-) => {
+export const webPanelRouter = (configs: ConfigType) => {
   const router = express.Router();
 
   router.get("/candidates", async (_req: Request, res: Response) => {
@@ -25,7 +20,7 @@ export const webPanelRouter = (
           ? false
           : undefined;
       const searchTerm: string = _req.query.search?.toString() || "";
-      const candidates = await candidateService.searchCandidates(
+      const candidates = await CandidateService.searchCandidates(
         searchTerm,
         isActive
       );
@@ -46,7 +41,7 @@ export const webPanelRouter = (
           res.status(400).json(createOutput(null, "Candidate ID is required"));
         }
 
-        const candidate = await candidateService.readCandidateById(candidateId);
+        const candidate = await CandidateService.readCandidateById(candidateId);
         if (candidate) res.json(createOutput(candidate));
         else res.status(404).json(createOutput(null, "Candidate not found"));
       } catch (error) {
@@ -79,14 +74,14 @@ export const webPanelRouter = (
         if (validationError)
           res.status(400).json(createOutput(null, validationError));
 
-        const candidate = await candidateService.readCandidateById(candidateId);
+        const candidate = await CandidateService.readCandidateById(candidateId);
         if (!candidate) {
           res.status(404).json(createOutput(null, "Candidate not found"));
         }
 
         const editedCandidate = { ...candidate, ...req.body };
 
-        const result = await candidateService.updateCandidate(editedCandidate);
+        const result = await CandidateService.updateCandidate(editedCandidate);
         if (result) {
           res.json(
             createOutput(editedCandidate, "Candidate updated successfully")
@@ -110,12 +105,12 @@ export const webPanelRouter = (
           res.status(400).json(createOutput(null, "Candidate ID is required"));
         }
 
-        const candidate = await candidateService.readCandidateById(candidateId);
+        const candidate = await CandidateService.readCandidateById(candidateId);
         if (!candidate) {
           res.status(404).json(createOutput(null, "Candidate not found"));
         }
 
-        const deactiveCandidate = await candidateService.deactivateCandidate(
+        const deactiveCandidate = await CandidateService.deactivateCandidate(
           candidate!
         );
         if (deactiveCandidate) {
@@ -137,7 +132,7 @@ export const webPanelRouter = (
       if (validationError)
         res.status(400).json(createOutput(null, validationError));
 
-      const candidate = await candidateService.addCandidate(
+      const candidate = await CandidateService.addCandidate(
         req.body.name,
         req.body.title,
         req.body.lastName,
@@ -153,12 +148,12 @@ export const webPanelRouter = (
 
   router.get("/roles/:role_name", async (req: Request, res: Response) => {
     try {
-      const isRoleExists = await roleService.isValidRole(req.params.role_name);
+      const isRoleExists = await RoleService.isValidRole(req.params.role_name);
       if (!isRoleExists) {
         return res.status(404).json(createOutput(null, "Role not found"));
       }
 
-      const responsibles = await responsibleService.getLastThreeResponsible(
+      const responsibles = await ResponsibleService.getLastThreeResponsible(
         req.params.role_name
       );
       res.json(createOutput(responsibles));
@@ -172,7 +167,7 @@ export const webPanelRouter = (
     "/roles/:role_name/:candidate_id",
     async (req: Request, res: Response) => {
       try {
-        const isRoleExists = await roleService.isValidRole(
+        const isRoleExists = await RoleService.isValidRole(
           req.params.role_name
         );
         if (!isRoleExists) {
@@ -184,13 +179,13 @@ export const webPanelRouter = (
           res.status(400).json(createOutput(null, "Candidate ID is required"));
         }
 
-        const candidate = await candidateService.readCandidateById(candidateId);
+        const candidate = await CandidateService.readCandidateById(candidateId);
         if (!candidate) {
           res.status(404).json(createOutput(null, "Candidate not found"));
         }
 
         const candidateResponsiblities =
-          await responsibleService.getCandidateResponsiblities(
+          await ResponsibleService.getCandidateResponsiblities(
             candidateId,
             req.params.role_name
           );

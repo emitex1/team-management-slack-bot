@@ -1,22 +1,16 @@
 import { configs } from "../configs";
 import { logsConstants } from "../constants/logs";
-import { CandidateServiceType } from "../types/CandidateService";
 import { Context } from "../types/Context";
-import { ResponsibleServiceType } from "../types/ResponsibleService";
 import { intents } from "../types/intents";
 import { areDatesInSameWeek, getFormattedDate } from "../util/dateHelpers";
 import { getRandomFaceEmoji, getRandomIconEmoji } from "../util/emojiHelpers";
 import { elogRed } from "../util/logHelper";
 import { saveRotatingCircleGif } from "./rouletteWheelService";
+import { CandidateService } from "../services/CandidateService";
+import { ResponsibleService } from "../services/ResponsibleService";
 
 export class ConversationService {
-  static run = async (
-    text: string,
-    context: Context,
-    witService: any,
-    candidateService: CandidateServiceType,
-    responsibleService: ResponsibleServiceType
-  ) => {
+  static run = async (text: string, context: Context, witService: any) => {
     if (!context.conversation) {
       context.conversation = {
         entities: {},
@@ -47,25 +41,17 @@ export class ConversationService {
       case intents.bye:
         return this.intentBye(context);
       case intents.select_random_responsible:
-        return this.intentSelectResponsible(
-          context,
-          candidateService,
-          responsibleService
-        );
+        return this.intentSelectResponsible(context);
       case intents.greeting:
         return this.intentGreeting(context);
       case intents.ask_candidates:
-        return this.intentAskCandidates(context, candidateService);
+        return this.intentAskCandidates(context);
       case intents.add_new_candidate:
-        return this.intentAddNewCandidate(context, candidateService);
+        return this.intentAddNewCandidate(context);
       case intents.add_new_responsible:
-        return this.intentAddNewResponsible(
-          context,
-          candidateService,
-          responsibleService
-        );
+        return this.intentAddNewResponsible(context);
       case intents.ask_last_three_responsibles:
-        return this.intentAskLastThreeResponsibles(context, responsibleService);
+        return this.intentAskLastThreeResponsibles(context);
       default:
         return this.noPredefinedIntent(context);
     }
@@ -80,11 +66,7 @@ export class ConversationService {
     return context;
   };
 
-  static intentSelectResponsible = async (
-    context: Context,
-    candidateService: CandidateServiceType,
-    responsibleService: ResponsibleServiceType
-  ) => {
+  static intentSelectResponsible = async (context: Context) => {
     const { conversation } = context;
     if (!conversation) return;
 
@@ -103,10 +85,10 @@ export class ConversationService {
       return context;
     }
 
-    const activeCandidates = await candidateService.readActiveCandidates();
+    const activeCandidates = await CandidateService.readActiveCandidates();
 
     const lastThreeResponsibles =
-      await responsibleService.getLastThreeResponsible(neededRole, 3);
+      await ResponsibleService.getLastThreeResponsible(neededRole, 3);
 
     const allCandidatesExceptLastThree = activeCandidates.filter((candidate) =>
       lastThreeResponsibles.every(
@@ -136,7 +118,7 @@ export class ConversationService {
       getRandomIconEmoji();
     conversation.followUpFileName = gifFileName;
 
-    responsibleService.addResponsibleIfExists(
+    ResponsibleService.addResponsibleIfExists(
       selectedResponsible.name,
       neededRole
     );
@@ -158,14 +140,11 @@ export class ConversationService {
     return context;
   };
 
-  static intentAskCandidates = async (
-    context: Context,
-    candidateService: CandidateServiceType
-  ) => {
+  static intentAskCandidates = async (context: Context) => {
     const { conversation } = context;
     if (!conversation) return;
 
-    const candidates = await candidateService.readActiveCandidates();
+    const candidates = await CandidateService.readActiveCandidates();
 
     if (!candidates.length) {
       conversation.followUp =
@@ -179,10 +158,7 @@ export class ConversationService {
     return context;
   };
 
-  static intentAddNewCandidate = async (
-    context: Context,
-    candidateService: CandidateServiceType
-  ) => {
+  static intentAddNewCandidate = async (context: Context) => {
     const { conversation } = context;
     if (!conversation) return;
 
@@ -197,7 +173,7 @@ export class ConversationService {
     }
 
     const getAllCandidateNamesInStringList = async () => {
-      const allCandidates = await candidateService.readActiveCandidates();
+      const allCandidates = await CandidateService.readActiveCandidates();
       return (
         "Here is the list of all the candidates: :point_down:\n\t" +
         "`" +
@@ -207,7 +183,7 @@ export class ConversationService {
     };
 
     const isDuplicate =
-      (await candidateService.readCandidateByName(newCandidateName)) !== null;
+      (await CandidateService.readCandidateByName(newCandidateName)) !== null;
     if (isDuplicate) {
       conversation.followUp =
         "Sorry, `" +
@@ -218,7 +194,7 @@ export class ConversationService {
     }
 
     try {
-      const saveResult = await candidateService.addCandidate(newCandidateName);
+      const saveResult = await CandidateService.addCandidate(newCandidateName);
     } catch (errorMessage) {
       elogRed("error in adding new candidate -> ", errorMessage);
       conversation.followUp =
@@ -239,11 +215,7 @@ export class ConversationService {
     return context;
   };
 
-  static intentAddNewResponsible = async (
-    context: Context,
-    candidateService: CandidateServiceType,
-    responsibleService: ResponsibleServiceType
-  ) => {
+  static intentAddNewResponsible = async (context: Context) => {
     const { conversation } = context;
     if (!conversation) return;
 
@@ -258,7 +230,7 @@ export class ConversationService {
     }
 
     try {
-      const lastResponsible = await responsibleService.getLastResponsible(
+      const lastResponsible = await ResponsibleService.getLastResponsible(
         newResponsibleRole
       );
       if (
@@ -274,7 +246,7 @@ export class ConversationService {
         return context;
       }
 
-      const saveResult = await responsibleService.addResponsibleIfExists(
+      const saveResult = await ResponsibleService.addResponsibleIfExists(
         newResponsibleName,
         newResponsibleRole
       );
@@ -289,7 +261,7 @@ export class ConversationService {
     }
 
     const lastThreeResponsibles =
-      await responsibleService.getLastThreeResponsible(newResponsibleRole, 3);
+      await ResponsibleService.getLastThreeResponsible(newResponsibleRole, 3);
     const lastThreeResponsiblesInStr = lastThreeResponsibles
       .map(
         (r) =>
@@ -318,10 +290,7 @@ export class ConversationService {
     return context;
   };
 
-  static intentAskLastThreeResponsibles = async (
-    context: Context,
-    responsibleService: ResponsibleServiceType
-  ) => {
+  static intentAskLastThreeResponsibles = async (context: Context) => {
     const { conversation } = context;
     if (!conversation) return;
 
@@ -335,7 +304,7 @@ export class ConversationService {
 
     try {
       const lastThreeResponsibles =
-        await responsibleService.getLastThreeResponsible(
+        await ResponsibleService.getLastThreeResponsible(
           askedResponsibleRole,
           3
         );
