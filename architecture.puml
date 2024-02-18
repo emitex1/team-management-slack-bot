@@ -8,37 +8,60 @@ skinparam linetype ortho
 !includeurl ICONURL/devicons/sqllite.puml
 !includeurl ICONURL/devicons/javascript.puml
 !includeurl ICONURL/devicons/nodejs.puml
+!includeurl ICONURL/devicons2/react_original.puml
+!includeurl ICONURL/devicons2/nodejs.puml
 !includeurl ICONURL/devicons2/slack.puml
 !includeurl ICONURL/devicons2/express_original.puml
 
 '-------------- The Elements --------------
 title: <size:30><&command> SlackBot Architecture <&command></size>
 
-Person(user, "team members")
+Person(user, "User")
 DEV2_SLACK(slack, Slack, node, white) #c300ff
 
-Boundary(slackbotBoundary, "SlackBot Boundary") {
+DEV2_REACT_ORIGINAL(webpanel, Web Panel, node, white) #00b503
 
-    DEV2_EXPRESS_ORIGINAL(routes, SlackBot APIs, rectangle, white) #DeepSkyBlue
-    Container(slackService, "Slack Service")
-    Container(sessionService, "Session Service")
-    Container(witService, "WIT Service")
-    note left
+Boundary(promobotBoundary, "") {
+
+    DEV2_EXPRESS_ORIGINAL(slack_routes, Slack APIs, rectangle, white) #DeepSkyBlue
+    Container(slackService, "Slack Services")
+    Container(sessionService, "Session Services")
+    Container(witService, "Conversation Services", "WIT")
+    note bottom
         AI based conversation service
     end note
 
-    DEV_NODEJS(teammateService, Teammate Service, rectangle, blue)
+    DEV2_EXPRESS_ORIGINAL(webpanel_routes, WebPanel APIs, rectangle, white) #DeepSkyBlue
+    DEV2_EXPRESS_ORIGINAL(general_routes, General APIs, rectangle, white) #DeepSkyBlue
+
+    Boundary(entityServices, "") {
+        DEV_NODEJS(teammateService, Teammate Services, rectangle, blue)
+        DEV_NODEJS(supervisorService, Supervisor Services, rectangle, blue)
+        DEV_NODEJS(roleService, Role Services, rectangle, blue)
+    }
     DEV_SQLLITE(database,SQLite Database,database,red)
 
-    Rel(routes, slackService, "onMention / onMessage")
+    Rel(slack_routes, slackService, "onMention / onMessage")
     Rel(slackService, sessionService, "get/set a Session")
     Rel(slackService, witService, "get a follow up answer")
-    Rel(witService, teammateService, "CRUD")
-    Rel(teammateService, database, "CRUD")
+    Rel(witService, entityServices, "CRUD")
+    Rel(entityServices, database, "Queries")
+
+    Rel(webpanel_routes, entityServices, "CRUD")
+    Rel(general_routes, entityServices, "CRUD")
+
 }
 
-Rel(slack, routes, "Send Events")
-Rel(routes, slack, "Send Message")
+Rel(slack, slack_routes, "User Events")
+Rel(slack_routes, slack, "Response Message")
+
+Rel(webpanel, webpanel_routes, "Call APIs")
+Rel(webpanel_routes, webpanel, "API Response")
+
+Rel(webpanel, general_routes, "Call APIs")
+Rel(general_routes, webpanel, "API Response")
+
 user --> slack
+user --> webpanel
 
 @enduml
