@@ -1,5 +1,4 @@
 export const intents = {
-  add_new_teammate: "add_new_teammate",
   add_new_supervisor: "add_new_supervisor",
   ask_teammates: "ask_teammates",
   ask_last_three_supervisors: "ask_last_three_supervisors",

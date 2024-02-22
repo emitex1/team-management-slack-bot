@@ -47,9 +47,6 @@ export class ConversationService {
         return this.intentGreeting(context);
       case intents.ask_teammates:
         return this.intentAskTeammates(context);
-      //TODO: remove this intent
-      case intents.add_new_teammate:
-        return this.intentAddNewTeammate(context);
       case intents.add_new_user_as_teammate:
         return this.intentAddNewUserAsTeammate(context);
       case intents.add_new_supervisor:
@@ -168,71 +165,6 @@ export class ConversationService {
       teammates
         .map((c, i) => (i + 1).toString() + ". " + c.firstName)
         .join("\n");
-    return context;
-  };
-
-  //TODO: remove this intent
-  static intentAddNewTeammate = async (context: Context) => {
-    const { conversation } = context;
-    if (!conversation) return;
-
-    const newTeammateName =
-      // conversation.entities.new_teammate;
-      conversation.entities.teammate;
-
-    if (!newTeammateName) {
-      conversation.followUp =
-        "Sorry, I didn't catch the name of the teammate. :pensive:\nCould you please rephrase it? ";
-      return context;
-    }
-
-    const getAllTeammateNamesInStringList = async () => {
-      const allTeammates = await TeammateService.readActiveTeammates();
-      return (
-        "Here is the list of all the teammates: :point_down:\n\t" +
-        "`" +
-        allTeammates.map((c) => c.firstName).join("`, `") +
-        "`"
-      );
-    };
-
-    const isDuplicate =
-      (await TeammateService.readTeammateByFirstName(newTeammateName)) !== null;
-    if (isDuplicate) {
-      conversation.followUp =
-        "Sorry, `" +
-        newTeammateName +
-        "` is already in the teammates list. So no need to add it again. :no_entry_sign:\n" +
-        (await getAllTeammateNamesInStringList());
-      return context;
-    }
-
-    try {
-      const saveResult = await TeammateService.addTeammate(
-        "",
-        newTeammateName,
-        "",
-        "",
-        "",
-        ""
-      );
-    } catch (errorMessage) {
-      elogRed("error in adding new teammate -> ", errorMessage);
-      conversation.followUp =
-        "Sorry, there were a problem with adding " +
-        newTeammateName +
-        " to the teammates list. :x:\n" +
-        errorMessage;
-      return context;
-    }
-    conversation.followUp =
-      "Okay, I added `" +
-      newTeammateName +
-      "` to the teammates list. :wink:\n" +
-      (await getAllTeammateNamesInStringList());
-
-    context.log = logsConstants.addNewUser(newTeammateName);
-
     return context;
   };
 
