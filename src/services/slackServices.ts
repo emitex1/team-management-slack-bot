@@ -11,6 +11,10 @@ import { Context } from "../types/Context";
 import { ConversationService } from "./ConversationService";
 import { configs } from "../configs";
 import { elogRed } from "../util/logHelper";
+import {
+  replaceMiddleMentions,
+  replaceStartMentions,
+} from "../util/mentionHelpers";
 
 export const handleMention = async (
   event: MentionEvent,
@@ -67,8 +71,25 @@ const processSlackEvent = async (
   slackWebClient: WebClient,
   session: Session<Context>
 ) => {
-  const mention = /<@[A-Z0-9]+>/;
-  const eventText = event.text.replace(mention, "").trim();
+  let eventText = event.text.trim();
+
+  // If the text is started with a mention, then it should be removed
+  eventText = replaceStartMentions(eventText);
+
+  // If there is a mention in between the text, it should be extracted and then replaced with "John Doe"
+  const replaceResult = replaceMiddleMentions(eventText);
+  eventText = replaceResult.text;
+
+  const mentionedUser =
+    replaceResult.mentionedMemberId &&
+    (await getUserInfo(slackWebClient, replaceResult.mentionedMemberId));
+  // elog("mentionedUser = ", mentionedUser);
+  if (mentionedUser) {
+    session.context.mention = {
+      user: mentionedUser,
+      memberId: replaceResult.mentionedMemberId!,
+    };
+  }
 
   const context = await ConversationService.run(
     eventText,

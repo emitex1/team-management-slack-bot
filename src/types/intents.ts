@@ -7,4 +7,5 @@ export const intents = {
   finish_adding_new_teammate: "finish_adding_new_teammate",
   greeting: "greeting",
   select_random_supervisor: "select_random_supervisor",
+  add_new_user_as_teammate: "add_new_user_as_teammate",
 };

@@ -1,3 +1,4 @@
+import { Profile } from "@slack/web-api/dist/response/UsersInfoResponse";
 import internal from "stream";
 
 export type Context = {
@@ -13,6 +14,10 @@ export type Context = {
     followUpFileName?: string;
     complete: boolean;
     exit: boolean;
+  };
+  mention?: {
+    user: Profile;
+    memberId: string;
   };
   log?: string;
 };

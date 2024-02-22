@@ -31,7 +31,7 @@ export class ConversationService {
     }
 
     const entities = await witService.query(text);
-    // elog("new entities = ", entities);
+    // elog("New entities from WIT = ", entities);
     context.conversation.entities = {
       ...context.conversation.entities,
       ...entities,
@@ -48,6 +48,8 @@ export class ConversationService {
         return this.intentAskTeammates(context);
       case intents.add_new_teammate:
         return this.intentAddNewTeammate(context);
+      case intents.add_new_user_as_teammate:
+        return this.intentAddNewUserAsTeammate(context);
       case intents.add_new_supervisor:
         return this.intentAddNewSupervisor(context);
       case intents.ask_last_three_supervisors:
@@ -213,6 +215,68 @@ export class ConversationService {
       (await getAllTeammateNamesInStringList());
 
     context.log = logsConstants.addNewUser(newTeammateName);
+
+    return context;
+  };
+
+  static intentAddNewUserAsTeammate = async (context: Context) => {
+    const { conversation, mention } = context;
+    if (!conversation) return;
+
+    if (!mention) {
+      conversation.followUp =
+        "Sorry, I didn't catch the name of the teammate. :pensive:\nCould you please rephrase it? ";
+      return context;
+    }
+
+    const getAllTeammateNamesInStringList = async () => {
+      const allTeammates = await TeammateService.readActiveTeammates();
+      return (
+        "Here is the list of all the teammates: :point_down:\n\t" +
+        "`" +
+        allTeammates.map((c) => c.name).join("`, `") +
+        "`"
+      );
+    };
+
+    const isDuplicate =
+      (await TeammateService.readTeammateByName(mention.user.first_name!)) !==
+      null;
+    if (isDuplicate) {
+      conversation.followUp =
+        "Sorry, `" +
+        mention.user.first_name +
+        "` is already in the teammates list. So no need to add it again. :no_entry_sign:\n" +
+        (await getAllTeammateNamesInStringList());
+      return context;
+    }
+
+    try {
+      await TeammateService.addTeammate(
+        mention.user.first_name!,
+        mention.user.title,
+        mention.user.last_name,
+        mention.memberId
+        // mention.user.display_name,
+        // mention.user.image_192,
+      );
+    } catch (errorMessage) {
+      elogRed("error in adding new teammate -> ", errorMessage);
+      conversation.followUp =
+        "Sorry, there were a problem with adding " +
+        mention.user.first_name +
+        " to the teammates list. :x:\n" +
+        errorMessage;
+      return context;
+    }
+
+    conversation.followUp =
+      "Okay, I added `" +
+      mention.user.real_name +
+      "` to the teammates list. :wink:\n" +
+      (await getAllTeammateNamesInStringList());
+
+    context.log = logsConstants.addNewUser(mention.user.real_name!);
 
     return context;
   };
