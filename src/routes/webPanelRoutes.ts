@@ -79,7 +79,7 @@ export const webPanelRouter = (configs: ConfigType) => {
       const result = await TeammateService.updateTeammate(editedTeammate);
       if (result) {
         res.json(createOutput(editedTeammate, "Teammate updated successfully"));
-        sendToLogChannel(logsConstants.updateTeammate(teammate?.name!));
+        sendToLogChannel(logsConstants.updateTeammate(teammate?.firstName!));
       } else res.status(500).json(createOutput(null, "Update failed"));
     } catch (error) {
       console.error(error);
@@ -107,7 +107,9 @@ export const webPanelRouter = (configs: ConfigType) => {
         );
         if (deactiveTeammate) {
           res.json(createOutput(teammate, "Teammate deactivated successfully"));
-          sendToLogChannel(logsConstants.deactivateTeammate(teammate?.name!));
+          sendToLogChannel(
+            logsConstants.deactivateTeammate(teammate?.firstName!)
+          );
         } else res.status(500).json(createOutput(null, "Deactivation failed"));
       } catch (error) {
         const errorMessage = (error as ErrorType).message;
@@ -123,13 +125,15 @@ export const webPanelRouter = (configs: ConfigType) => {
         res.status(400).json(createOutput(null, validationError));
 
       const teammate = await TeammateService.addTeammate(
-        req.body.name,
         req.body.title,
+        req.body.firstName,
         req.body.lastName,
-        req.body.userName
+        req.body.slackMemberId,
+        req.body.displayName,
+        req.body.avatarUrl
       );
       res.json(createOutput(teammate));
-      sendToLogChannel(logsConstants.addNewUser(teammate?.name!, true));
+      sendToLogChannel(logsConstants.addNewUser(teammate?.firstName!, true));
     } catch (error) {
       const errorMessage = (error as ErrorType).message;
       res.status(500).json(createOutput(null, errorMessage));

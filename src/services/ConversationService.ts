@@ -46,6 +46,7 @@ export class ConversationService {
         return this.intentGreeting(context);
       case intents.ask_teammates:
         return this.intentAskTeammates(context);
+      //TODO: remove this intent
       case intents.add_new_teammate:
         return this.intentAddNewTeammate(context);
       case intents.add_new_user_as_teammate:
@@ -102,7 +103,7 @@ export class ConversationService {
 
     allTeammatesExceptLastThree.sort(() => Math.random() - 0.5);
     const randomizedTeammateNames = allTeammatesExceptLastThree.map(
-      (teammate) => teammate.name
+      (teammate) => teammate.firstName
     );
     const gifFileName = saveRotatingCircleGif(randomizedTeammateNames);
     const selectedSupervisor = allTeammatesExceptLastThree[0];
@@ -110,13 +111,13 @@ export class ConversationService {
     conversation.followUp =
       "Okay, I randomized the list of teammates as follow:\n" +
       allTeammatesExceptLastThree
-        .map((c, i) => (i + 1).toString() + ". " + c.name)
+        .map((c, i) => (i + 1).toString() + ". " + c.firstName)
         .join("\n") +
       "\n\nCongrats " +
       "<@" +
-      selectedSupervisor.userName +
+      selectedSupervisor.slackMemberId +
       "> (`" +
-      selectedSupervisor.name +
+      selectedSupervisor.firstName +
       "`) " +
       getRandomFaceEmoji() +
       "\nNow you are the new `" +
@@ -126,12 +127,12 @@ export class ConversationService {
     conversation.followUpFileName = gifFileName;
 
     SupervisorService.addSupervisorIfExists(
-      selectedSupervisor.name,
+      selectedSupervisor.firstName,
       neededRole
     );
 
     context.log = logsConstants.selectRandomSupervisor(
-      selectedSupervisor.name,
+      selectedSupervisor.firstName,
       neededRole
     );
 
@@ -161,10 +162,13 @@ export class ConversationService {
 
     conversation.followUp =
       "Here is the list of teammates: :point_down:\n" +
-      teammates.map((c, i) => (i + 1).toString() + ". " + c.name).join("\n");
+      teammates
+        .map((c, i) => (i + 1).toString() + ". " + c.firstName)
+        .join("\n");
     return context;
   };
 
+  //TODO: remove this intent
   static intentAddNewTeammate = async (context: Context) => {
     const { conversation } = context;
     if (!conversation) return;
@@ -184,13 +188,13 @@ export class ConversationService {
       return (
         "Here is the list of all the teammates: :point_down:\n\t" +
         "`" +
-        allTeammates.map((c) => c.name).join("`, `") +
+        allTeammates.map((c) => c.firstName).join("`, `") +
         "`"
       );
     };
 
     const isDuplicate =
-      (await TeammateService.readTeammateByName(newTeammateName)) !== null;
+      (await TeammateService.readTeammateByFirstName(newTeammateName)) !== null;
     if (isDuplicate) {
       conversation.followUp =
         "Sorry, `" +
@@ -201,7 +205,14 @@ export class ConversationService {
     }
 
     try {
-      const saveResult = await TeammateService.addTeammate(newTeammateName);
+      const saveResult = await TeammateService.addTeammate(
+        "",
+        newTeammateName,
+        "",
+        "",
+        "",
+        ""
+      );
     } catch (errorMessage) {
       elogRed("error in adding new teammate -> ", errorMessage);
       conversation.followUp =
@@ -237,14 +248,15 @@ export class ConversationService {
       return (
         "Here is the list of all the teammates: :point_down:\n\t" +
         "`" +
-        allTeammates.map((c) => c.name).join("`, `") +
+        allTeammates.map((c) => c.firstName).join("`, `") +
         "`"
       );
     };
 
     const isDuplicate =
-      (await TeammateService.readTeammateByName(mention.user.first_name!)) !==
-      null;
+      (await TeammateService.readTeammateByFirstName(
+        mention.user.first_name!
+      )) !== null;
     if (isDuplicate) {
       conversation.followUp =
         "Sorry, `" +
@@ -256,12 +268,12 @@ export class ConversationService {
 
     try {
       await TeammateService.addTeammate(
-        mention.user.first_name!,
-        mention.user.title,
-        mention.user.last_name,
-        mention.memberId
-        // mention.user.display_name,
-        // mention.user.image_192,
+        mention.user.title || "",
+        mention.user.first_name || "",
+        mention.user.last_name || "",
+        mention.memberId,
+        mention.user.display_name || "",
+        mention.user.image_192 || ""
       );
     } catch (errorMessage) {
       elogRed("error in adding new teammate -> ", errorMessage);
@@ -337,7 +349,7 @@ export class ConversationService {
       .map(
         (r) =>
           "`" +
-          r.teammate.name +
+          r.teammate.firstName +
           " (" +
           r.role.title +
           ")\t" +
@@ -388,7 +400,7 @@ export class ConversationService {
         lastThreeSupervisors
           .map(
             (r) =>
-              r.teammate.name +
+              r.teammate.firstName +
               " (" +
               r.role.title +
               ")\t" +

@@ -4,7 +4,7 @@ import { Supervisor } from "./Supervisor";
 @Entity()
 export class Teammate {
   constructor() {
-    this.name = "";
+    this.firstName = "";
     this.isActive = true;
     this.creationDate = Date.now() / 1;
   }
@@ -21,7 +21,7 @@ export class Teammate {
   @Column({
     length: 100,
   })
-  name: string;
+  firstName: string;
 
   @Column({
     length: 120,
@@ -30,10 +30,21 @@ export class Teammate {
   lastName?: string;
 
   @Column({
-    length: 50,
+    length: 120,
     nullable: true,
   })
-  userName?: string;
+  displayName?: string;
+
+  @Column({
+    length: 20,
+  })
+  slackMemberId: string;
+
+  @Column({
+    length: 200,
+    nullable: true,
+  })
+  avatarUrl?: string;
 
   @Column({})
   isActive: boolean;

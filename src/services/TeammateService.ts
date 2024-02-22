@@ -17,7 +17,7 @@ export const TeammateService = {
     }
 
     if (searchTerm) {
-      teammates.andWhere("LOWER(teammate.name) LIKE LOWER(:searchTerm)", {
+      teammates.andWhere("LOWER(teammate.firstName) LIKE LOWER(:searchTerm)", {
         searchTerm: `%${searchTerm}%`,
       });
     }
@@ -39,31 +39,35 @@ export const TeammateService = {
     return teammate;
   },
 
-  readTeammateByName: async (name: string) => {
+  readTeammateByFirstName: async (firstName: string) => {
     const teammatesRepository = AppDataSource.getRepository(Teammate);
 
     const teammate = await teammatesRepository
       .createQueryBuilder("teammate")
-      .where("LOWER(teammate.name) = LOWER(:name)", { name })
+      .where("LOWER(teammate.firstName) = LOWER(:firstName)", { firstName })
       .andWhere("teammate.isActive = true")
       .getOne();
     return teammate;
   },
 
   addTeammate: async (
-    name: string,
-    title?: string,
-    lastName?: string,
-    userName?: string
+    title: string,
+    firstName: string,
+    lastName: string,
+    slackMemberId: string,
+    displayName: string,
+    avatarUrl: string
   ) => {
-    if (!name || !name.trim())
+    if (!firstName || !firstName.trim())
       return Promise.reject("Teammate name is required");
 
     const teammate = new Teammate();
-    teammate.name = name;
+    teammate.firstName = firstName;
     teammate.title = title;
     teammate.lastName = lastName;
-    teammate.userName = userName;
+    teammate.displayName = displayName;
+    teammate.slackMemberId = slackMemberId;
+    teammate.avatarUrl = avatarUrl;
 
     const teammatesRepository = AppDataSource.getRepository(Teammate);
     const savedTeammate = await teammatesRepository.save(teammate);

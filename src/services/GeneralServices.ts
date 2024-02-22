@@ -38,11 +38,14 @@ export const GeneralServices = {
     const roleRepo = AppDataSource.getRepository(Role);
 
     initTeammates.forEach(async (teammate) => {
+      //TODO: use teammate service to save the data in db
       let teammatePayload = new Teammate();
-      teammatePayload.name = teammate.name;
+      teammatePayload.firstName = teammate.name;
       teammatePayload.lastName = teammate.lastName;
       teammatePayload.title = teammate.title;
-      teammatePayload.userName = teammate.userName;
+      teammatePayload.displayName = teammate.displayName;
+      teammatePayload.slackMemberId = teammate.slackMemberId;
+      teammatePayload.avatarUrl = teammate.avatarUrl;
       if (teammate.isActive !== undefined)
         teammatePayload.isActive = teammate.isActive;
 

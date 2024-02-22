@@ -66,7 +66,7 @@ export const SupervisorService = {
   addSupervisorIfExists: async (teammateName: string, roleName: string) => {
     const teammatesRepository = AppDataSource.getRepository(Teammate);
     const teammate = await teammatesRepository.findOneBy({
-      name: teammateName,
+      firstName: teammateName,
     });
 
     if (!teammate) {
