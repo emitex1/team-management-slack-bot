@@ -21,7 +21,7 @@ DEV2_SLACK(slack, Slack, node, white) #c300ff
 
 DEV2_REACT_ORIGINAL(webpanel, Web Panel, node, white) #00b503
 
-Boundary(promobotBoundary, "") {
+Boundary(botBoundary, "") {
 
     DEV2_EXPRESS_ORIGINAL(slack_routes, Slack APIs, rectangle, white) #DeepSkyBlue
     Container(slackService, "Slack Services")
