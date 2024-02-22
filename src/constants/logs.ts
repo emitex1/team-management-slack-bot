@@ -13,9 +13,9 @@ export const logsConstants = {
     roleName +
     "`.",
 
-  selectRandomSupervisor: (userName: string, roleName: string) =>
+  selectRandomSupervisor: (fullName: string, roleName: string) =>
     ":mega: `" +
-    userName +
+    fullName +
     "` has been selected as the new `" +
     roleName +
     "`.",

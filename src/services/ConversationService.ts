@@ -8,6 +8,7 @@ import { elogRed } from "../util/logHelper";
 import { saveRotatingCircleGif } from "./rouletteWheelService";
 import { TeammateService } from "../services/TeammateService";
 import { SupervisorService } from "../services/SupervisorService";
+import { toPascalCase } from "../util/stringHelpers";
 
 export class ConversationService {
   static run = async (text: string, context: Context, witService: any) => {
@@ -118,10 +119,12 @@ export class ConversationService {
       selectedSupervisor.slackMemberId +
       "> (`" +
       selectedSupervisor.firstName +
+      " " +
+      selectedSupervisor.lastName +
       "`) " +
       getRandomFaceEmoji() +
       "\nNow you are the new `" +
-      neededRole +
+      toPascalCase(neededRole) +
       "` " +
       getRandomIconEmoji();
     conversation.followUpFileName = gifFileName;
@@ -132,8 +135,8 @@ export class ConversationService {
     );
 
     context.log = logsConstants.selectRandomSupervisor(
-      selectedSupervisor.firstName,
-      neededRole
+      selectedSupervisor.firstName + " " + selectedSupervisor.lastName,
+      toPascalCase(neededRole)
     );
 
     // conversation.complete = true;
