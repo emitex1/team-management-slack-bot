@@ -42,6 +42,7 @@ export const GeneralServices = {
       teammatePayload.name = teammate.name;
       teammatePayload.lastName = teammate.lastName;
       teammatePayload.title = teammate.title;
+      teammatePayload.userName = teammate.userName;
       if (teammate.isActive !== undefined)
         teammatePayload.isActive = teammate.isActive;
 
