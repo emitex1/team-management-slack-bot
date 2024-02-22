@@ -112,9 +112,12 @@ export class ConversationService {
       allTeammatesExceptLastThree
         .map((c, i) => (i + 1).toString() + ". " + c.name)
         .join("\n") +
-      "\n\nCongrats `" +
+      "\n\nCongrats " +
+      "<@" +
+      selectedSupervisor.userName +
+      "> (`" +
       selectedSupervisor.name +
-      "` " +
+      "`) " +
       getRandomFaceEmoji() +
       "\nNow you are the new `" +
       neededRole +
